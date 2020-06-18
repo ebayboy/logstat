@@ -1,0 +1,78 @@
+{
+
+    "numstat": 2,
+    "input": [
+      {
+        "hkeysplit": "_",
+        "hkey": [
+          "grpid",
+          "host",
+          "ts"
+        ],
+        "split": "|",
+        "cols": [
+          "ip_reqs",
+          "ip_static_reqs",
+          "ip_dyn_reqs",
+          "ip_same_ua_page",
+          "ip_page_click_time_avg",
+          "ip_reqs_referer",
+          "ip_dyn_reqs_pages",
+          "dev_with_ips",
+          "ip_dyn_post_reqs"
+        ],
+        "redis": [
+          {
+            "addr": "192.168.137.101:6379",
+            "passwd": "123456",
+            "db": 0,
+            "sub": "channel01"
+          }
+        ]
+      }
+    ],
+    "stat": [
+      {
+        "statspolicys": [
+          {
+            "desc": "IP请求量【5m】",
+            "name": "ip_reqs_5m",
+            "expr": "SUM(ip_reqs, 5)"
+          },
+          {
+            "name": "ip_static_reqs_5m",
+            "expr": "AVG(ip_static_reqs, 5)"
+          }
+        ],
+        "riskpolicys": [
+          {
+            "name": "IP_LARGE_NOT_LOAD_STATIC",
+            "desc": "IP大量请求不加载静态资源",
+            "logic": "and",
+            "rules": [
+              {
+                "desc": "IP请求量【5m】> 50",
+                "expr": "GT(ip_reqs_5m, 50)"
+              },
+              {
+                "desc": "IP静态资源请求量【5m】 = 0",
+                "expr": "EQ(ip_static_reqs_5m,0)"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": [
+      {
+        "hash": true,
+        "redis": [
+          {
+            "addr": "192.168.137.101:6379",
+            "passwd": "123456",
+            "db": 0
+          }
+        ]
+      }
+    ]
+  }
