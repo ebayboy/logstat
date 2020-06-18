@@ -1,15 +1,27 @@
-CXX = g++
-CXXFLAGS = -Wall -Werror -Wextra -pedantic -std=c++17 -g -fsanitize=address
-LDFLAGS =  -fsanitize=address
 
-SRC = 
-OBJ = $(SRC:.cc=.o)
-EXEC = riskstat
+CC = g++
+LD = g++
+SRCS = $(wildcard *.cpp)
+OBJS = $(patsubst %cpp, %o, $(SRCS))
 
-all: $(EXEC)
+INCLUDE = -I./include
 
-$(EXEC): $(OBJ)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
+# -L指定库文件目录，-l指定静态库名字(去掉文件名中的lib前缀和.a后缀)
+LIB = -L./libs -lpthread
+
+CFLAGS = -g -Wall -O3
+
+TARGET = riskstat
+
+.PHONY:all clean
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(LD) -o $@ $^ $(LIB)
+
+%o:%cpp
+	$(CC) -c $^ $(INCLUDE) $(CFLAGS) 
 
 clean:
-	rm -rf $(OBJ) $(EXEC)
+	rm -f $(OBJS) $(TARGET)
