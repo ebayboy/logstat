@@ -9,7 +9,7 @@ all: $(TARGET)
 
 $(TARGET):
 	$(MAKE) -C $(SUBDIRS)
-	cp src/$(TARGET) . 
+	cp src/$(TARGET)* . 
 
 clean: $(SUBDIRS)
 	$(MAKE) $@ -C $(SUBDIRS)
