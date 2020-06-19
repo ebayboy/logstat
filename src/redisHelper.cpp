@@ -4,6 +4,10 @@
 
 #include "redisHelper.h"
 
+//TODO:
+//1. add subscript surpport
+//
+
 int HiredisHelper::Connect() {
     struct timeval tv;
     tv.tv_sec = m_timeout / 1000;
