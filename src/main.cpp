@@ -6,31 +6,32 @@
 using json = nlohmann::json;
 using namespace std;
 
-
-void testJSON()
+static int readCfg(string filename)
 {
-    auto j3 = json::parse("{ \"happy\": true, \"pi\": 3.141 }");
+    try
+    {
+        std::ifstream fs(filename);
+        if (!fs.is_open()) {
+            cerr << "Error: open file failed!" << endl;
+            return -1;
+        }
+        json j;
+        fs >> j;
+        string s = j.dump();
+        cout << s << endl;
+    }
+    catch (std::exception & e)
+    {
+        cout << "Error: open file!" << e.what() << endl;
+    }
 
-    std::string s = j3.dump();
-
-    cout << "s:" << s << endl;
+    return 0;
 }
 
-void readCfg(string filename)
+int main(int argc, char const *argv[])
 {
-    std::ifstream fs(filename);
-    json j;
-    fs >> j;
-
-    string s = j.dump();
-
-    cout << s << endl;
-}
-
-int main(int argc, char const *argv[]) {
     /* code */
     cout << "riskstat start..." << endl;
-
 
     readCfg("conf/input.json");
 
