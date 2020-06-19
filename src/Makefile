@@ -24,4 +24,4 @@ $(TARGET): $(OBJS)
 	$(CC) -c $^ $(INCLUDE) $(CFLAGS) 
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET)*
