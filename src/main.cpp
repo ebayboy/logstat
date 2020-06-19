@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     /* code */
     cout << "riskstat start..." << endl;
 
-    readCfg("conf/input.json");
+    readCfg("../conf/input.json");
 
     cout << "riskstat exit!" << endl;
 
