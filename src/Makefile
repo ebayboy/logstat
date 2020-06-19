@@ -2,14 +2,17 @@
 CC = g++
 LD = g++
 SRCS = $(wildcard *.cpp)
-OBJS = $(patsubst %.cpp, %.o, $(SRCS))
+SRCS_TEST = $(wildcard test/*.cpp)
 
-INCLUDE = -I./include
+OBJS = $(patsubst %.cpp, %.o, $(SRCS))
+OBJS_TEST = $(patsubst %.cpp, %.o, $(SRCS_TEST))
+
+INCLUDE = -I./include -I./test
 
 # -L指定库文件目录，-l指定静态库名字(去掉文件名中的lib前缀和.a后缀)
-LIB = -L./libs 
+LIB = -L./libs -lhiredis
 
-CFLAGS = -std=c++11 -Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wno-ctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-overflow=5 -Wswitch -Wundef -Wno-unused -Wnon-virtual-dtor -Wreorder -Wdeprecated -Wno-float-equal
+CFLAGS = -std=c++11 -Wall -Wextra -Wcast-align -Wcast-qual -Wno-ctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Woverloaded-virtual -Wredundant-decls -Wsign-promo -Wstrict-overflow=5 -Wswitch -Wundef -Wno-unused -Wnon-virtual-dtor -Wreorder -Wdeprecated -Wno-float-equal
 
 TARGET = riskstat_cpp
 
@@ -17,11 +20,11 @@ TARGET = riskstat_cpp
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJS) $(OBJS_TEST)
 	$(LD) -o $@ $^ $(LIB)
 
 %.o:%.cpp
-	$(CC) -c $^ $(INCLUDE) $(CFLAGS) 
+	$(CC) -c $^ $(INCLUDE) $(CFLAGS) -o $@
 
 clean:
-	rm -f $(OBJS) $(TARGET)*
+	rm -f $(OBJS) $(OBJS_TEST) $(TARGET)*
