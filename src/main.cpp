@@ -12,8 +12,14 @@ using json = nlohmann::json;
 using namespace std;
 
 
-int main(int argc, char const *argv[])
+int main(int argc, char * const argv[])
 {
+    string c;
+
+    readargs(argc, argv, c);
+
+    cout << "config:" << c << endl;
+
     /* code */
     cout << "riskstat start..." << endl;
 
