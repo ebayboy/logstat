@@ -20,7 +20,7 @@ TARGET = riskstat_cpp
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS) $(OBJS_TEST)
+$(TARGET): $(OBJS_TEST) $(OBJS)
 	$(LD) -o $@ $^ $(LIB)
 
 %.o:%.cpp

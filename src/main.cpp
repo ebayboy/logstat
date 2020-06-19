@@ -8,26 +8,11 @@
 #include "util.h"
 #include "redisHelper.h"
 
+//for test
 #include "testRedisHelper.h"
 
 using json = nlohmann::json;
 using namespace std;
-
-static void testRedisHelper();
-
-static void testRedisHelper()
-{
-    cout << "test redisHelper" << endl;
-
-    HiredisHelper hi;
-    string ip = "127.0.0.1";
-    int port = 6379;
-    string auth_str = "123456";
-    int timeout = 200;
-    hi.Init(ip, port, auth_str, timeout);
-
-    int ret = addStrContent(hi);
-}
 
 int main(int argc, char * const argv[])
 {
@@ -42,7 +27,7 @@ int main(int argc, char * const argv[])
 
     readCfg("../conf/input.json");
 
-    testRedisHelper();
+    redisHelperTest();
 
     cout << "riskstat exit!" << endl;
 
