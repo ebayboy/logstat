@@ -10,15 +10,19 @@
 #include "hiredis/async.h"
 #include "hiredis/adapters/libevent.h"
 
+#include "redisSubscriptHelper.h"
 
 using namespace std;
 
-void authCallback(redisAsyncContext *c, void *r, void *priv) {
+static void authCallback(redisAsyncContext *c, void *r, void *priv) {
     redisReply *reply = (redisReply*)r;
 
     cout << "auth reply->type:" << reply->type << "reply->str:" << reply->str << endl;
 
     if (reply == NULL) {
+        if (c->errstr) {
+            printf("errstr: %s\n", c->errstr);
+        }
         return;
     }
 
@@ -32,9 +36,10 @@ void authCallback(redisAsyncContext *c, void *r, void *priv) {
     }
 }
 
-void subCallback(redisAsyncContext *c, void *r, void *priv) {
+static void subCallback(redisAsyncContext *c, void *r, void *priv) {
     redisReply *reply = (redisReply*)r;
     if (reply == NULL) {
+        printf("Error: %s\n", c->errstr);
         return;
     }
 
@@ -48,7 +53,7 @@ void subCallback(redisAsyncContext *c, void *r, void *priv) {
     }
 }
 
-void connectCallback(const redisAsyncContext *c, int status) {
+static void connectCallback(const redisAsyncContext *c, int status) {
     if (status != REDIS_OK) {
         printf("Error: %s\n", c->errstr);
         return;
@@ -56,7 +61,7 @@ void connectCallback(const redisAsyncContext *c, int status) {
     printf("Connected...\n");
 }
 
-void disconnectCallback(const redisAsyncContext *c, int status) {
+static void disconnectCallback(const redisAsyncContext *c, int status) {
     if (status != REDIS_OK) {
         printf("Error: %s\n", c->errstr);
         return;
@@ -64,10 +69,12 @@ void disconnectCallback(const redisAsyncContext *c, int status) {
     printf("Disconnected...\n");
 }
 
-int reidsSubInit() 
+int reidsSubInit(char *addr, int port, char *auth, char *sub) 
 {
     struct event_base *base = event_base_new();
-    redisAsyncContext *c = redisAsyncConnect("127.0.0.1", 6379);
+    redisAsyncContext *c = redisAsyncConnect(addr, port);
+    char cmd[BUFSIZ] = {0};
+
     if (c->err) {
         /* Let *c leak for now... */
         printf("Error: %s\n", c->errstr);
@@ -79,10 +86,16 @@ int reidsSubInit()
     redisAsyncSetDisconnectCallback(c,disconnectCallback);
 
     //AUTH
-    redisAsyncCommand(c, authCallback, (char*) "auth", "AUTH 123456");
+    if (auth && strlen(auth) > 0) {
+        snprintf(cmd, sizeof(cmd), "AUTH %s", auth);
+        redisAsyncCommand(c, authCallback, (char*)"auth", cmd);
+    }
 
     //SUB
-    redisAsyncCommand(c, subCallback, (char*) "sub", "SUBSCRIBE channel01");
+    if (sub && strlen(sub) > 0) {
+        snprintf(cmd, sizeof(cmd), "SUBSCRIBE %s", sub);
+        redisAsyncCommand(c, subCallback, (char*)"sub", cmd);
+    }
 
     event_base_dispatch(base);
 

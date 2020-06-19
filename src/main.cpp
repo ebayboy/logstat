@@ -24,7 +24,7 @@ static void startRedisSub()
 {
     cout << "thread start ..." << endl;
 
-    reidsSubInit();
+    reidsSubInit((char *)"127.0.0.1", 6379, (char *)"123456", (char *)"channel01");
 
     cout << "thread over ..." << endl;
 }
@@ -48,7 +48,7 @@ int main(int argc, char * const argv[])
     t1.detach();
 
     for (int i = 0;; i++) {
-        cout << "loop : " << i << "time" << endl;
+        cout << "loop [" << i << "] times!" << endl;
         sleep(1);
     }
 
