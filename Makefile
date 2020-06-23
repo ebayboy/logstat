@@ -3,7 +3,7 @@
 #SUBDIRS := $(wildcard */.)
 SUBDIRS := ./src
  
-TARGET = riskstat_cpp
+TARGET = logstat
 
 all: $(TARGET)
 

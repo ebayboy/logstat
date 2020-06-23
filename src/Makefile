@@ -14,7 +14,7 @@ LIB = -L./libs -lhiredis -levent
 
 CFLAGS = -std=c++11 -Wall -Wextra -Wcast-align -Wno-ctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Woverloaded-virtual -Wredundant-decls -Wsign-promo -Wstrict-overflow=5 -Wswitch -Wundef -Wno-unused -Wnon-virtual-dtor -Wreorder -Wdeprecated -Wno-float-equal
 
-TARGET = riskstat_cpp
+TARGET = logstat
 
 .PHONY:all clean
 
