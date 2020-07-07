@@ -42,7 +42,12 @@ int main(int argc, char * const argv[])
 
     readCfg("../conf/input.json");
 
-    redisHelperTest();
+	redisHelperTestInsertData();
+
+	//exit 
+	exit(0);
+
+    //redisHelperPublish();
 
     thread t1(startRedisSub);
     t1.detach();

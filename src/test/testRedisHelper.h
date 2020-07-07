@@ -2,7 +2,8 @@
 #ifndef __TESTREDISHELPER__H_
 #define __TESTREDISHELPER__H_
 
-void redisHelperTest();
+void redisHelperTestInsertData();
+void redisHelperPublish();
 
 #endif
 
