@@ -32,17 +32,34 @@ static void startRedisSub()
 int main(int argc, char * const argv[])
 {
     string c;
+	string d;
 
-    readargs(argc, argv, c);
+    readargs(argc, argv, c, d);
 
     cout << "config:" << c << endl;
+    cout << "domain:" << d << endl;
 
     /* code */
     cout << "riskstat start..." << endl;
 
     readCfg("../conf/input.json");
 
-	redisHelperTestInsertData();
+	//redisHelperTestInsertData();
+	
+	//vector<string> items;
+
+	size_t hostSize = std::stoi(d);
+
+	cout << "hostSize:" << hostSize << endl;
+
+	pubStrContent(hostSize);
+
+	/*
+	hgetallContent("grp00_t.com.0_1590977640", items);
+	for (auto i : items) {
+		cout << i << endl;
+	}
+	*/
 
 	//exit 
 	exit(0);

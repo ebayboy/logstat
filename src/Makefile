@@ -24,7 +24,7 @@ $(TARGET): $(OBJS_TEST) $(OBJS)
 	$(LD) -o $@ $^ $(LIB)
 
 %.o:%.cpp
-	$(CC) -c $^ $(INCLUDE) $(CFLAGS) -o $@
+	$(CC) -g -c $^ $(INCLUDE) $(CFLAGS) -o $@
 
 clean:
 	rm -f $(OBJS) $(OBJS_TEST) $(TARGET)*

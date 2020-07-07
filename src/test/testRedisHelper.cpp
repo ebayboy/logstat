@@ -27,22 +27,36 @@ using namespace std;
 	}
 
 //PUBLISH channel01 "grp00_t.com_1590977640"
-static int pubStrContent(HiredisHelper &redis_conn) {
-	string m_redis_key = "grp00_t.com_1590977640";
-	string m_redis_channel = "channel01";
-	stringstream ss_cmd;
-	ss_cmd << "PUBLISH " << m_redis_channel << " "<< m_redis_key;
+int pubStrContent(size_t hostSize) {
 
-	string cmd = ss_cmd.str();
-	redisReply *reply = redis_conn.ExecuteCmd(cmd);
-	if (reply) {
-		//cout << "push redis succ " << cmd << endl;
-		return 0;
-	} else {
-		cout << "push redis fail " << cmd << endl;
-		return -1;
+	HiredisHelper redis_conn;
+	redis_conn.Init("127.0.0.1", 6379, "123456", 200);
+
+	for (size_t i = 0; i < hostSize; i++)
+	{
+		ostringstream oss;
+		oss << "grp00_t.com." << i << "_1590977640";
+
+		stringstream ss_cmd;
+		ss_cmd << "PUBLISH channel01 " << oss.str();
+
+		string cmd = ss_cmd.str();
+		redisReply *reply = redis_conn.ExecuteCmd(cmd);
+		if (reply) {
+			cout << "push redis succ " << cmd << endl;
+		} else {
+			cout << "push redis fail " << cmd << endl;
+		}
+		if (reply) {
+			freeReplyObject(reply);
+		} else  {
+			cout << "freeReplyObject Fail" << endl;
+		}
+
+		usleep(200);
 	}
-	CHECK_FREE_REDIS_REPLY(reply);
+
+	return 0;
 }
 
 // set "cloudox" "boy"
@@ -132,8 +146,15 @@ static int getZsetContent(HiredisHelper &redis_conn, vector<string> &items) {
 }
 
 //HGETALL grp00_t.com_1590977640
-static int hgetallContent(HiredisHelper &redis_conn, vector<string> &items) {
-	string m_redis_key = "grp00_t.com_1590977640";
+int hgetallContent(string m_redis_key, vector<string> &items) {
+	HiredisHelper redis_conn;
+	string ip = "127.0.0.1";
+	int port = 6379;
+	string auth_str = "123456";
+	int timeout = 200;
+	redis_conn.Init(ip, port, auth_str, timeout);
+
+
 	stringstream ss_cmd;
 	ss_cmd << "HGETALL " << m_redis_key;
 
@@ -165,29 +186,23 @@ static void  getCmds(std::vector<string> &cmds, size_t hostSize, size_t ipsSize)
 {
 
 	//HSET grp00_t.com_1590977400 1.1.1.1 "11|00|33|44|55|66|77"
-	string tms[] = {
-		"1590977400", "1590977460", "1590977520", "1590977580", "1590977640"};
+	string tms[] = { "1590977400", "1590977460", "1590977520", "1590977580", "1590977640"};
 	string split = "_";
 	string grpid = "grp00";
-	string vals[] = {
-		"11|11|11|11|11|11", "22|22|22|22|22|22", "33|33|33|33|33|33", "44|44|44|44|44|44", "55|55|55|55|55|55"};
+	string vals[] = { "11|11|11|11|11|11", "22|22|22|22|22|22", "33|33|33|33|33|33", "44|44|44|44|44|44", "55|55|55|55|55|55"};
 
-	//HSET grp00_t.com_1590977400 1.1.1.1 "11|00|33|44|55|66"
+	//HSET grp00_t.com_
 	std::vector<string> keys;
 	std::vector<string> ips;
 
 	for (size_t i = 0; i < hostSize; i++)
 	{
-		for (size_t j = 0; j < sizeof(tms)/sizeof(string); j++)
-		{
-			ostringstream oss;
-
-			oss << "grp00_" << "t.com." << i << "_" << tms[j];
-			keys.push_back(oss.str());
-		}
+		ostringstream oss;
+		oss << "grp00_" << "t.com." << i << "_";
+		keys.push_back(oss.str());
 	}
 
-	//生成2000个ip地址
+	//生成ip地址
 	//1-254.1.1.1-254
 	for (size_t k = 1; k < 254 && ips.size() < ipsSize; k++)
 	{
@@ -202,17 +217,21 @@ static void  getCmds(std::vector<string> &cmds, size_t hostSize, size_t ipsSize)
 	//遍历 keys ips vals
 	//key :  grp00_t.com_1590977400 
 	for(size_t i=0; i < keys.size(); i++){
-		//push ip data
-		for (size_t j = 0; j < ips.size(); j++) {
-			//HSET grp00_t.com.0_1590977400 1.1.1.1 "11|00|33|44|55|66"
-			string cmd = "HSET " + keys[i] + " " + ips[j] + " " + vals[i];
+
+		//for timestamp
+		for (size_t h = 0; h < sizeof(tms)/sizeof(string); h++) {
+			//push ip data
+			for (size_t j = 0; j < ips.size(); j++) {
+				//HSET grp00_t.com.0_1590977400 1.1.1.1 "11|00|33|44|55|66"
+				string cmd = "HSET " + keys[i] + tms[h] + " " + ips[j] + " " + vals[h];
+				cmds.push_back(cmd);
+			}
+
+			//push all data
+			//k: grp00_t.com.0_1590977400 all "11|00|33|44|55|66"
+			string cmd = "HSET " + keys[i] + tms[h] + " all 99|99|99|99|99|99";
 			cmds.push_back(cmd);
 		}
-
-		//push all data
-		//k: grp00_t.com.0_1590977400 all "11|00|33|44|55|66"
-		string cmd = "HSET " + keys[i] + " all 99|99|99|99|99|99";
-		cmds.push_back(cmd);
 	}
 }
 

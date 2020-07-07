@@ -32,10 +32,10 @@ int readCfg(std::string filename)
     return 0;
 }
 
-void readargs(int argc, char * const argv[], string &c)
+void readargs(int argc, char * const argv[], string &c, string &d)
 {
     int ch;
-    while ((ch = getopt(argc, argv, "c:v:h")) != -1) {
+    while ((ch = getopt(argc, argv, "c:d:v:h")) != -1) {
         switch (ch) {
             case 'c': 
                 c = string(optarg); 
@@ -46,6 +46,9 @@ void readargs(int argc, char * const argv[], string &c)
             case 'h': 
                 cout << "Usage: \n\t-c config file\n\t-v version\n" << endl;
                 break;
+			case 'd':
+				d = string(optarg);
+				break;
         }
     }
 }
