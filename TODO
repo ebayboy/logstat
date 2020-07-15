@@ -1,5 +1,7 @@
 
 TODO:
+- json to struct
+
 
 WillDo:
 
@@ -9,3 +11,15 @@ Done:
 - cpp json lib
 - add libevent
 
+#### 处理流程：
+- 接收sub信息
+- 读取redis数据
+- 计算
+- 输出
+- 多线程架构
+
+
+
+11111
+
+2222

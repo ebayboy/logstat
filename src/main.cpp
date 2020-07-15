@@ -6,12 +6,11 @@
 #include <string>
 #include <thread>
 
-#include <stdlib.h>
-#include <unistd.h>
-
 #include "util.h"
 #include "redisHelper.h"
 #include "redisSubscriptHelper.h"
+
+#include "RiskConfig.hpp"
 
 //for test
 #include "testRedisHelper.h"
@@ -41,8 +40,6 @@ static void runTestCase(int argc, char **argv)
 
     /* code */
     cout << "riskstat start..." << endl;
-
-    readCfg(c);
 
 	//redisHelperTestInsertData();
 	
@@ -82,7 +79,9 @@ int main(int argc, char * const argv[])
     /* code */
     cout << "riskstat start..." << endl;
 
-    readCfg(c);
+    RiskConfig riskCfg(c);
+
+    cout << "numstat:" << riskCfg.numstat << endl;
 
     return 0;
 }
