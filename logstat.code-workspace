@@ -8,6 +8,10 @@
 		"files.associations": {
 			"typeinfo": "cpp",
 			"ostream": "cpp"
+		},
+		"files.exclude": {
+			"**/*.exe": true,
+			"**/*.o": true
 		}
 	}
 }
