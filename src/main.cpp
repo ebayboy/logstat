@@ -29,9 +29,9 @@ static void startRedisSub()
     cout << "thread over ..." << endl;
 }
 
-int main(int argc, char * const argv[])
+static void runTestCase(int argc, char **argv)
 {
-    string c;
+	string c = "../conf/riskstat.json";
 	string d;
 
     readargs(argc, argv, c, d);
@@ -42,7 +42,7 @@ int main(int argc, char * const argv[])
     /* code */
     cout << "riskstat start..." << endl;
 
-    readCfg("../conf/input.json");
+    readCfg(c);
 
 	//redisHelperTestInsertData();
 	
@@ -61,10 +61,28 @@ int main(int argc, char * const argv[])
 	}
 	*/
 
-	//exit 
 	exit(0);
 
     //redisHelperPublish();
+}
+
+int main(int argc, char * const argv[])
+{
+#if 0
+	runTestCase();
+#endif
+
+    string c = "./conf/riskstat.json";
+	string d;
+
+    readargs(argc, argv, c, d);
+
+    cout << "config:" << c << endl;
+
+    /* code */
+    cout << "riskstat start..." << endl;
+
+    readCfg(c);
 
     return 0;
 }

@@ -1,0 +1,207 @@
+{
+
+    "numstat": 2,
+    "input": [
+        {
+            "hkeysplit": "_",
+            "hkey": [
+                "grpid",
+                "host",
+                "ts"
+            ],
+            "split": "|",
+            "cols": [
+                "ip_reqs",
+                "ip_static_reqs",
+                "ip_dyn_reqs",
+                "ip_same_ua_page",
+                "ip_page_click_time_avg",
+                "ip_reqs_referer",
+                "ip_dyn_reqs_pages",
+                "dev_with_ips",
+                "ip_dyn_post_reqs"
+            ],
+            "redis": [
+                {
+                    "addr": "192.168.137.101:6379",
+                    "passwd": "123456",
+                    "db": 0,
+                    "sub": "channel01"
+                }
+            ]
+        }
+    ],
+    "stat": [
+        {
+            "statspolicys": [
+                {
+                    "desc": "IP请求量【5m】",
+                    "name": "ip_reqs_5m",
+                    "expr": "SUM(ip_reqs, 5)"
+                },
+                {
+                    "desc": "IP静态资源请求量【5m】",
+                    "name": "ip_static_reqs_5m",
+                    "expr": "SUM(ip_static_reqs, 5)"
+                },
+                {
+                    "desc": "IP动态资源请求【5m】",
+                    "name": "ip_dyn_reqs_5m",
+                    "expr": "SUM(ip_dyn_reqs,5)"
+                },
+                {
+                    "desc": "IP页面相同UA请求量【5m】",
+                    "name": "ip_same_ua_page_5m",
+                    "expr": "SUM(ip_same_ua_page, 5)"
+                },
+                {
+                    "desc": "IP页面点击间隔平均值【5m】",
+                    "name": "ip_page_click_time_avg_5m",
+                    "expr": "AVG(ip_page_click_time_avg, 5)"
+                },
+                {
+                    "desc": "IP请求带referer的数量【5m】",
+                    "name": "ip_reqs_referer_5m",
+                    "expr": "SUM(ip_reqs_referer,5)"
+                },
+                {
+                    "desc": "IP动态请求不同页面数【5m】",
+                    "name": "ip_dyn_reqs_pages",
+                    "expr": "SUM(ip_dyn_reqs_pages, 5)"
+                },
+                {
+                    "desc": "设备关联IP数量【5m】",
+                    "name": "dev_with_ips_5m",
+                    "expr": "SUM(dev_with_ips, 5)"
+                },
+                {
+                    "desc": "IP动态资源请求POST占比【5m】",
+                    "name": "ip_dyn_post_reqs_5m",
+                    "expr": "SUM(ip_dyn_post_reqs, 5)"
+                }
+            ],
+            "riskpolicys": [
+                {
+                    "name": "IP_LARGE_NOT_LOAD_STATIC",
+                    "desc": "IP大量请求不加载静态资源",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP请求量【5m】> 50",
+                            "expr": "GT(ip_reqs_5m, 50)"
+                        },
+                        {
+                            "desc": "IP静态资源请求量【5m】 = 0",
+                            "expr": "EQ(ip_static_reqs_5m,0)"
+                        }
+                    ]
+                },
+                {
+                    "name": "ip_dyn_reqs_5m",
+                    "desc": "IP大量连续其他类型请求",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP动态资源请求【5m】 > 20",
+                            "expr": "GT(ip_dyn_reqs_5m, 20)"
+                        }
+                    ]
+                },
+                {
+                    "name": "IP_LARGE_SINGLE_PAGE_SAME_UA",
+                    "desc": "IP相同UA大量请求单个页面",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP页面相同UA请求量【5m】 > 50",
+                            "expr": "GT(ip_same_ua_page_5m,50)"
+                        }
+                    ]
+                },
+                {
+                    "name": "IP_TIME_ON_PAGE",
+                    "desc": "IP页面停留时间过短Web",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP动态资源请求量【5m】> 100",
+                            "expr": "GT(ip_dyn_reqs_5m,100)"
+                        },
+                        {
+                            "desc": "IP页面点击间隔平均值【5m】 > 800",
+                            "expr": "GT(ip_page_click_time_avg_5m,800)"
+                        }
+                    ]
+                },
+                {
+                    "name": "IP_LARGE_WITHOUT_REFERER",
+                    "desc": "IP大量请求不带referrer【5m】",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP动态资源请求【5m】> 20",
+                            "expr": "GT(ip_dyn_reqs_5m,20)"
+                        },
+                        {
+                            "desc": "IP带referer页面请求数[5m] = 0",
+                            "expr": "EQ(ip_reqs_referer_5m,0)"
+                        }
+                    ]
+                },
+                {
+                    "name": "IP_LARGE_SINGLE_PAGE",
+                    "desc": "IP大量请求单个页面",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP动态资源请求量【5m】> 10",
+                            "expr": "GT(ip_dyn_reqs_5m,10)"
+                        },
+                        {
+                            "desc": "IP动态请求不同页面数【5m】= 1",
+                            "expr": "EQ(ip_dyn_reqs_pages,1)"
+                        }
+                    ]
+                },
+                {
+                    "name": "DEV_WITH_IPS",
+                    "desc": "设备关联多个IP（账号安全-高频关联）",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "设备关联IP数量【5m】> 5",
+                            "expr": "GT(dev_with_ips_5m,5)"
+                        }
+                    ]
+                },
+                {
+                    "name": "IP_LARGE_POST",
+                    "desc": "IP大量连续POST请求",
+                    "logic": "and",
+                    "rules": [
+                        {
+                            "desc": "IP动态资源请求量【5m】> 30",
+                            "expr": "GT(ip_dyn_reqs_5m,30)"
+                        },
+                        {
+                            "desc": "IP动态资源请求POST占比【5m】 = 1",
+                            "expr": "EQ(ip_dyn_post_reqs_5m/ip_dyn_reqs_5m,1)"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "hash": true,
+            "redis": [
+                {
+                    "addr": "192.168.137.101:6379",
+                    "passwd": "123456",
+                    "db": 0
+                }
+            ]
+        }
+    ]
+}
