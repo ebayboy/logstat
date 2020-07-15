@@ -66,15 +66,5 @@ int main(int argc, char * const argv[])
 
     //redisHelperPublish();
 
-    thread t1(startRedisSub);
-    t1.detach();
-
-    for (int i = 0;; i++) {
-        cout << "loop [" << i << "] times!" << endl;
-        sleep(1);
-    }
-
-    cout << "riskstat exit!" << endl;
-
     return 0;
 }

@@ -4,5 +4,10 @@
 #### libs:
 - cpp redis
 - cpp json lib
+- add libevent
+
+Error:
+./include/hiredis/adapters/libevent.h:33:10: fatal error: event2/event.h: No such file or directory
+ #include <event2/event.h>
 
 

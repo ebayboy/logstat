@@ -1,16 +1,19 @@
 
+#ifndef _WIN32_WINNT
+#include <thread>
+#else
+#include "mingw-std-threads/mingw.thread.h"
+#endif
+
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <thread>
 #include <vector>
 #include <fstream>
-
-#include <time.h>
-#include <unistd.h>
+#include <ctime>
 
 #include "redisHelper.h"
-
 #include "testRedisHelper.h"
 
 using namespace std;
@@ -53,7 +56,7 @@ int pubStrContent(size_t hostSize) {
 			cout << "freeReplyObject Fail" << endl;
 		}
 
-		usleep(200);
+		this_thread::sleep_for(chrono::milliseconds(200));
 	}
 
 	return 0;
