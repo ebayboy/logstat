@@ -45,7 +45,7 @@ RiskConfig::RiskConfig(std::string cfgName)
     auto js_inputs = js["input"];
     for(auto it = js_inputs.begin(); it != js_inputs.end(); it++) {
         cout << *it << endl;
-        cout << "111" << endl;
+        cout << "111111" << endl;
     }
 }
 
