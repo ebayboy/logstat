@@ -27,7 +27,7 @@ static void authCallback(redisAsyncContext *c, void *r, void *priv) {
     }
 
     if (reply->type == REDIS_REPLY_STATUS) {
-        if (strcasecmp(reply->str, "OK") == 0) {
+        if (strcmp(reply->str, "OK") == 0) {
             cout << (char *)priv << " : " << reply->str << endl; 
         }
     } else {
