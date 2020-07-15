@@ -29,3 +29,6 @@
 *.exe
 *.out
 *.app
+src/libs/*.a
+src/libs/libevent
+src/libs/hiredis

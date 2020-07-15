@@ -6,7 +6,7 @@ function build_hiredis()
 {
 	ls src/libs/*.tar.bz2 | xargs -i tar xf {} -C src/libs/
 	make -C src/libs/hiredis
-	ln -s src/libs/hiredis/hiredis.a src/libs/
+	cp src/libs/hiredis/libhiredis.a src/libs/
 }
 
 
