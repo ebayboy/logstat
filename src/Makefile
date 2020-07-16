@@ -1,12 +1,23 @@
 CC = g++
 LD = g++
-SRCS = $(wildcard *.cpp)
-OBJS=$(SRCS:.cpp=.o)
-DEPS=$(SRCS:.cpp=.d)
 
-INCLUDE = -I./include -I./test
+INCLUDES = -I./include -I./test
 LIB = -L./libs -lhiredis -levent
 CFLAGS = -std=c++11 -Wall -Wextra -Wcast-align -Wno-ctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Woverloaded-virtual -Wredundant-decls -Wsign-promo -Wstrict-overflow=5 -Wswitch -Wundef -Wno-unused -Wnon-virtual-dtor -Wreorder -Wdeprecated -Wno-float-equal
+
+ROOT_SRCS := $(wildcard *.cpp) 
+ROOT_OBJS=$(ROOT_SRCS:.cpp=.o)
+
+MODULES   := func
+SUB_DIRS  := $(addprefix ./,$(MODULES))
+SUB_SRCS  := $(foreach sdir,$(SUB_DIRS),$(wildcard $(sdir)/*.cpp))
+SUB_OBJS=$(SUB_SRCS:.cpp=.o)
+SUB_INCLUDES  := $(addprefix -I,$(SUB_DIRS))
+
+DEPS=$(SRCS:.cpp=.d)
+DEPS+=$(SUB_SRCS:.cpp=.d)
+
+INCLUDES+=$(SUB_INCLUDES)
 
 TARGET = logstat
 
@@ -14,13 +25,13 @@ TARGET = logstat
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS) 
-	$(LD) -o $@ $^ $(INCLUDE) $(LIB) 
+$(TARGET): $(ROOT_OBJS) $(SUB_OBJS)
+	$(LD) -o $@ $^ $(INCLUDES) $(LIB) 
 
 %.o:%.cpp 
-	$(CC) -c -g $< $(INCLUDE) $(CFLAGS) -o $@ -MD -MF $*.d -MP
+	$(CC) -c -g $< $(INCLUDES) $(CFLAGS) -o $@ -MD -MF $*.d -MP
 
 clean:
-	rm -f $(OBJS) *.d $(TARGET)*
+	rm -f $(OBJS) $(ROOT_OBJS) *.d $(SUB_DIRS)/*.d $(TARGET)*
 
 -include $(DEPS)

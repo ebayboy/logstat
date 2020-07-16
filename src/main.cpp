@@ -15,6 +15,8 @@
 //for test
 #include "testRedisHelper.h"
 
+#include "func/func.h"
+
 using json = nlohmann::json;
 using namespace std;
 
@@ -65,6 +67,8 @@ static void runTestCase(int argc, char **argv)
 
 int main(int argc, char * const argv[])
 {
+    func();
+
 #if 0
 	runTestCase();
 #endif
