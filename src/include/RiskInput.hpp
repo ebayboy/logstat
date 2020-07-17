@@ -34,7 +34,7 @@ public:
 private:
     std::string addr;
     std::string passwd;
-    int db;
+    int db = 0;
     std::string sub;
 };
 
@@ -67,9 +67,9 @@ public:
     }
 
 private:
-    std::string hkeysplit;
+    std::string hkeysplit = "_";
     std::vector<std::string> hkey;
-    std::string split;
+    std::string split = "|";
     std::vector<std::string> cols;
     std::vector<RiskRedis> redis;
 };
