@@ -25,28 +25,69 @@ public:
     std::vector<RiskInput> inputs;
 };
 
+class Student {
+    private:
+        int age;
+        string name;
+        string sex;
+};
+
 RiskConfig::RiskConfig(std::string cfgName)
 {
-    nlohmann::json js;
+    nlohmann::json j;
     std::ifstream fs(cfgName);
-    if (!fs.bad())
+
+    cout << "RiskConfig..." << endl;
+
+    if (fs.bad())
     {
         cerr << "Error: open file failed!" << endl;
+        return;
     }
-    fs >> js;
-    std::string s = js.dump();
-    cout << s << endl;
 
+    fs >> j;
     //numstat
-    this->numstat = js["numstat"];
+    cout << "js.dump:" << j.dump() << endl;
 
-    //input array
-    RiskInput r;
-    auto js_inputs = js["input"];
-    for(auto it = js_inputs.begin(); it != js_inputs.end(); it++) {
-        cout << *it << endl;
-        cout << "5551111115" << endl;
+    Student s;
+    nlohmann::from_json(j, s);
+
+    
+
+    #if 0
+    this->numstat = j["numstat"];
+    cout << "numstat:" << this->numstat << endl;
+
+    /*
+    namespace ns {
+        struct person {
+            std::string name;
+            std::string address;
+            int age;
+        };
     }
+    ns::person p {
+    j["name"].get<std::string>(),
+    j["address"].get<std::string>(),
+    j["age"].get<int>()
+    };
+    */
+    auto jInputs = j["input"];
+    for (auto it = j["input"].begin(); it != jInputs.end(); it++)
+    {
+        //parse input
+        cout << "key:" << it.key() << endl;
+        cout << "value:" << it.value() << endl;
+        cout << "5551111115" << endl;
+        RiskInput input{
+
+        };
+
+        from_json(j["input"], input);
+
+        this->inputs.push_back(input);
+    }
+    #endif
 }
 
 RiskConfig::~RiskConfig()
