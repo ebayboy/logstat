@@ -10,45 +10,6 @@
 using namespace std;
 using namespace nlohmann;
 
-class CPerson
-{
-public:
-    CPerson(){};
-    CPerson(string name, string address, int age)
-    {
-        this->name = name;
-        this->address = address;
-        this->age = age;
-    }
-    
-    friend ostream &operator<<(ostream &output, const CPerson &b)
-    {
-        output << "name:" << b.name << endl;
-        output << "address:" << b.address << endl;
-        output << "age:" << b.age << endl;
-
-        return output;
-    }
-
-    // Person p = json j;
-    friend void to_json(json &j, const CPerson &p)
-    {
-        j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
-    }
-
-    //json j = Person{};
-    friend void from_json(const json &j, CPerson &p)
-    {
-        j.at("name").get_to(p.name);
-        j.at("address").get_to(p.address);
-        j.at("age").get_to(p.age);
-    }
-
-private:
-    std::string name;
-    std::string address;
-    int age;
-};
 
 struct person
 {
@@ -114,6 +75,48 @@ static void testStruct()
     cout << "p1.age:" << p1.age << endl;
     //assert(p == p2);
 }
+
+
+// ================================= TEST CLASS ===========================================
+class CPerson
+{
+public:
+    CPerson(){};
+    CPerson(string name, string address, int age)
+    {
+        this->name = name;
+        this->address = address;
+        this->age = age;
+    }
+    
+    friend ostream &operator<<(ostream &output, const CPerson &b)
+    {
+        output << "name:" << b.name << endl;
+        output << "address:" << b.address << endl;
+        output << "age:" << b.age << endl;
+
+        return output;
+    }
+
+    // Person p = json j;
+    friend void to_json(json &j, const CPerson &p)
+    {
+        j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
+    }
+
+    //json j = Person{};
+    friend void from_json(const json &j, CPerson &p)
+    {
+        j.at("name").get_to(p.name);
+        j.at("address").get_to(p.address);
+        j.at("age").get_to(p.age);
+    }
+
+private:
+    std::string name;
+    std::string address;
+    int age;
+};
 
 static void testClass()
 {

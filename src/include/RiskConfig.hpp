@@ -16,17 +16,23 @@ class RiskConfig
 {
 public:
     friend class RiskInput;
-    RiskConfig() {};
-    RiskConfig(string cfgName);
+    RiskConfig(){};
     RiskConfig(int numstat, vector<RiskInput> input){};
-    ~RiskConfig();
+    ~RiskConfig(){};
 
     friend ostream &operator<<(ostream &output, const RiskConfig &b)
     {
         output << "numstat:" << b.numstat << endl;
+        output << "sizeof(input):" << b.input.size() << endl;
+
+        for (auto &&i : b.input)
+        {
+            cout << i << endl;
+        }
 
         return output;
     }
+
     friend void to_json(json &j, const RiskConfig &p)
     {
         j = json{
@@ -44,32 +50,5 @@ private:
     int numstat;
     vector<RiskInput> input;
 };
-
-RiskConfig::RiskConfig(string cfgName)
-{
-  #if 0 
-
-    auto r = j.get<RiskConfig>();
-
-
-    auto jinput = j["input"];
-    for (auto it = j["input"].begin(); it != jinput.end(); it++)
-    {
-        //parse input
-        cout << "key:" << it.key() << endl;
-        cout << "value:" << it.value() << endl;
-        cout << "5551111115" << endl;
-        RiskInput input{
-
-        };
-
-        this->input.push_back(input);
-    }
-#endif
-}
-
-RiskConfig::~RiskConfig()
-{
-}
 
 #endif // __RISKCONFIG_HPP__

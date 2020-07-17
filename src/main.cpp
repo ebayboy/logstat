@@ -71,8 +71,8 @@ static void runTestCase(int argc, char **argv)
 class RiskStat
 {
 public:
-    RiskStat(string cfgName) ;
-    
+    RiskStat(string cfgName);
+
     friend ostream &operator<<(ostream &output, const RiskStat &b)
     {
         output << "cfgName:" << b.cfgName << endl;
@@ -99,6 +99,10 @@ RiskStat::RiskStat(string cfgName) : cfgName(cfgName)
     fs >> this->j;
 
     fs.close();
+
+    //parse RiskConfig
+    auto rc = this->j.get<RiskConfig>();
+    cout << "rc:" << rc << endl;
 };
 
 int main(int argc, char *const argv[])
@@ -113,7 +117,7 @@ int main(int argc, char *const argv[])
 
     cout << "RiskStat: " << r << endl;
 
- /* code */
+    /* code */
     cout << "riskstat start..." << endl;
 
     return 0;

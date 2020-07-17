@@ -7,6 +7,9 @@
 
 #include <nlohmann/json.hpp>
 
+using namespace std;
+using namespace nlohmann;
+
 class RiskRedis
 {
 public:
@@ -31,6 +34,16 @@ public:
         j.at("sub").get_to(p.sub);
     }
 
+    friend ostream &operator<<(ostream &output, const RiskRedis &b)
+    {
+        cout << "addr:" << b.addr << endl;
+        cout << "passwd:" << b.passwd << endl;
+        cout << "db:" << b.db << endl;
+        cout << "sub:" << b.sub << endl;
+
+        return output;
+    }
+
 private:
     std::string addr;
     std::string passwd;
@@ -44,32 +57,60 @@ public:
     friend class RiskRedis;
     RiskInput(){};
     RiskInput(std::string hkeysplit,
-              std::vector<std::string> hkey,
               std::string split,
+              std::vector<std::string> hkey,
               std::vector<std::string> cols,
               std::vector<RiskRedis> redis) : hkeysplit(hkeysplit),
-                                                hkey(hkey),
-                                                split(split),
-                                                cols(cols),
-                                                redis(redis){};
+                                              split(split),
+                                              hkey(hkey),
+                                              cols(cols),
+                                              redis(redis){};
     ~RiskInput(){};
     friend void to_json(nlohmann::json &j, const RiskInput &p)
     {
         //j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
     }
+
     friend void from_json(const nlohmann::json &j, RiskInput &p)
     {
-        /*
-        j.at("name").get_to(p.name);
-        j.at("address").get_to(p.address);
-        j.at("age").get_to(p.age);
-        */
+        j.at("hkeysplit").get_to(p.hkeysplit);
+        j.at("split").get_to(p.split);
+        j.at("hkey").get_to(p.hkey);
+        j.at("cols").get_to(p.cols);
+        j.at("redis").get_to(p.redis);
+    }
+
+    friend ostream &operator<<(ostream &output, const RiskInput &b)
+    {
+        //print cols
+        cout << "cols:" << endl;
+        for_each(b.cols.begin(), b.cols.end(), [&](string x) -> void { cout << x << " "; });
+        cout << endl;
+
+        //print  hkey
+        cout << "hkey: " << endl;
+        for (auto &&i : b.hkey)
+        {
+            cout << i << " ";
+        }
+        cout << endl;
+
+        //print redis
+        for (auto &&j : b.redis)
+        {
+            cout << "redis: " << j << endl;
+        }
+
+        cout << "split:" << b.split << endl;
+        cout << "hkeysplit:" << b.hkeysplit << endl;
+
+        return output;
     }
 
 private:
-    std::string hkeysplit = "_";
+    std::string hkeysplit;
+    std::string split;
     std::vector<std::string> hkey;
-    std::string split = "|";
     std::vector<std::string> cols;
     std::vector<RiskRedis> redis;
 };
