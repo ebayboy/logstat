@@ -52,7 +52,6 @@ RiskConfig::RiskConfig(std::string cfgName)
     Student s;
     nlohmann::from_json(j, s);
 
-    
 
     #if 0
     this->numstat = j["numstat"];
