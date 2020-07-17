@@ -81,7 +81,7 @@ static void testStruct()
 class CPerson
 {
 public:
-    CPerson(){};
+    CPerson(){};  // used by from json
     CPerson(string name, string address, int age)
     {
         this->name = name;
@@ -99,10 +99,12 @@ public:
     }
 
     // Person p = json j;
+    #if 0
     friend void to_json(json &j, const CPerson &p)
     {
         j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
     }
+    #endif
 
     //json j = Person{};
     friend void from_json(const json &j, CPerson &p)
@@ -122,6 +124,7 @@ static void testClass()
 {
     std::cout << __func__ << "=====================" << endl;
 
+#if 0
     // create a person
     CPerson p {"Ned Flanders", "744 Evergreen Terrace", 60};
 
@@ -130,16 +133,16 @@ static void testClass()
     json j = p;
 
     std::cout << j << std::endl;
-    // {"address":"744 Evergreen Terrace","age":60,"name":"Ned Flanders"}
+    #endif
+    //json j = "{\"Ned Flanders\", \"744 Evergreen Terrace\", 60}";
+    json j =  "{\"address\":\"744 Evergreen Terrace\",\"age\":60,\"name\":\"Ned Flanders\"}"_json;
 
     // conversion: json -> person
     // from_json
     auto p1 = j.get<CPerson>();
-#if 0
 
     // that's it
     cout << p1 << endl;
-#endif
 }
 
 int main(int args, char **argv)

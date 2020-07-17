@@ -1,7 +1,20 @@
 
 TODO:
 - json to struct
+    + input 
+    + []compute
+    + []output
 
+- compute 数学表达式解析计算
+    + SUM(ip, total, 5)  map + funccall
+    + GT(ip_total_5m/all_total_5m,0.1) 
+        + 参数解析: ip_total_5m, all_total_5m, 0.1(LAST)
+        + 计算ret = ip_total_5m/all_total_5m => 输入数据到参数中
+        + 计算 GT => ret > 0.1
+    + and (vector<int> rules)
+
+- output
+    + 输出结果到redis
 
 WillDo:
 
