@@ -14,22 +14,20 @@ using namespace std;
 class RiskConfig
 {
 public:
+    friend class RiskInput;
     RiskConfig(string cfgName);
-    RiskConfig(RiskConfig &&) = default;
-    RiskConfig(const RiskConfig &) = default;
-    RiskConfig &operator=(RiskConfig &&) = default;
-    RiskConfig &operator=(const RiskConfig &) = default;
     ~RiskConfig();
 
+    friend ostream &operator<<(ostream &output, const RiskConfig &b)
+    {
+        output << "numstat:" << b.numstat << endl;
+
+        return output;
+    }
+
+private:
     int numstat;
     std::vector<RiskInput> inputs;
-};
-
-class Student {
-    private:
-        int age;
-        string name;
-        string sex;
 };
 
 RiskConfig::RiskConfig(std::string cfgName)
@@ -49,11 +47,7 @@ RiskConfig::RiskConfig(std::string cfgName)
     //numstat
     cout << "js.dump:" << j.dump() << endl;
 
-    Student s;
-    nlohmann::from_json(j, s);
-
-
-    #if 0
+#if 0
     this->numstat = j["numstat"];
     cout << "numstat:" << this->numstat << endl;
 
@@ -86,7 +80,7 @@ RiskConfig::RiskConfig(std::string cfgName)
 
         this->inputs.push_back(input);
     }
-    #endif
+#endif
 }
 
 RiskConfig::~RiskConfig()

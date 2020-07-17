@@ -85,7 +85,5 @@ int main(int argc, char * const argv[])
 
     RiskConfig riskCfg(c);
 
-    cout << "numstat:" << riskCfg.numstat << endl;
-
     return 0;
 }

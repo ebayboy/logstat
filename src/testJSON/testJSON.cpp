@@ -20,6 +20,7 @@ public:
         this->address = address;
         this->age = age;
     }
+    
     friend ostream &operator<<(ostream &output, const CPerson &b)
     {
         output << "name:" << b.name << endl;
@@ -28,11 +29,14 @@ public:
 
         return output;
     }
+
+    // Person p = json j;
     friend void to_json(json &j, const CPerson &p)
     {
         j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
     }
 
+    //json j = Person{};
     friend void from_json(const json &j, CPerson &p)
     {
         j.at("name").get_to(p.name);
@@ -116,7 +120,7 @@ static void testClass()
     std::cout << __func__ << "=====================" << endl;
 
     // create a person
-    CPerson p{"Ned Flanders", "744 Evergreen Terrace", 60};
+    CPerson p {"Ned Flanders", "744 Evergreen Terrace", 60};
 
     // conversion: person -> json
     // to_json
