@@ -7,7 +7,44 @@
 
 #include <nlohmann/json.hpp>
 
-#include <assert.h>
+using namespace std;
+using namespace nlohmann;
+
+class CPerson
+{
+public:
+    CPerson(){};
+    CPerson(string name, string address, int age)
+    {
+        this->name = name;
+        this->address = address;
+        this->age = age;
+    }
+    friend ostream &operator<<(ostream &output, const CPerson &b)
+    {
+        output << "name:" << b.name << endl;
+        output << "address:" << b.address << endl;
+        output << "age:" << b.age << endl;
+
+        return output;
+    }
+    friend void to_json(json &j, const CPerson &p)
+    {
+        j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
+    }
+
+    friend void from_json(const json &j, CPerson &p)
+    {
+        j.at("name").get_to(p.name);
+        j.at("address").get_to(p.address);
+        j.at("age").get_to(p.age);
+    }
+
+private:
+    std::string name;
+    std::string address;
+    int age;
+};
 
 struct person
 {
@@ -15,9 +52,6 @@ struct person
     std::string address;
     int age;
 };
-
-using namespace nlohmann;
-using namespace std;
 
 static void case1()
 {
@@ -40,12 +74,12 @@ static void case1()
     cout << "p1.age:" << p1.age << endl;
 }
 
-void to_json(json &j, const person &p)
+static void to_json(json &j, const person &p)
 {
     j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
 }
 
-void from_json(const json &j, person &p)
+static void from_json(const json &j, person &p)
 {
     j.at("name").get_to(p.name);
     j.at("address").get_to(p.address);
@@ -77,10 +111,35 @@ static void testStruct()
     //assert(p == p2);
 }
 
+static void testClass()
+{
+    std::cout << __func__ << "=====================" << endl;
+
+    // create a person
+    CPerson p{"Ned Flanders", "744 Evergreen Terrace", 60};
+
+    // conversion: person -> json
+    // to_json
+    json j = p;
+
+    std::cout << j << std::endl;
+    // {"address":"744 Evergreen Terrace","age":60,"name":"Ned Flanders"}
+
+    // conversion: json -> person
+    // from_json
+    auto p1 = j.get<CPerson>();
+#if 0
+
+    // that's it
+    cout << p1 << endl;
+#endif
+}
+
 int main(int args, char **argv)
 {
     case1();
     testStruct();
+    testClass();
 
     return 0;
 }
