@@ -6,9 +6,9 @@
 #include <string>
 #include <thread>
 
-#include "util.h"
-#include "redisHelper.h"
-#include "redisSubscriptHelper.h"
+#include "util/util.h"
+#include "redisHelper/redisHelper.h"
+#include "redisSubscriptHelper/redisSubscriptHelper.h"
 
 #include "RiskConfig.hpp"
 
@@ -73,7 +73,7 @@ int main(int argc, char * const argv[])
 	runTestCase();
 #endif
 
-    string c = "./conf/riskstat.json";
+    string c = "../conf/riskstat.json";
 	string d;
 
     readargs(argc, argv, c, d);
