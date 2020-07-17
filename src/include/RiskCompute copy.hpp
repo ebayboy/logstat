@@ -92,7 +92,7 @@ class RiskCompute
 public:
     friend class RiskPolicy;
     RiskCompute(){};
-    RiskCompute(vector<RiskPolicy> r) :  riskpolicys(r){};
+    RiskCompute(vector<RiskPolicy> r) : riskpolicys(r){};
     ~RiskCompute(){};
 
     friend void to_json(nlohmann::json &j, const RiskCompute &p)
@@ -108,7 +108,7 @@ public:
 
     friend ostream &operator<<(ostream &output, const RiskCompute &b)
     {
-   
+       
 
         for (auto &&i : b.riskpolicys)
         {
