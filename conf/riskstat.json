@@ -1,33 +1,99 @@
 {
+    "debug": true,
     "numstat": 2,
-    "input": [
-        {
-            "hkeysplit": "_",
-            "hkey": [
-                "grpid",
-                "host",
-                "ts"
-            ],
-            "split": "|",
-            "cols": [
-                "ip_reqs",
-                "ip_static_reqs",
-                "ip_dyn_reqs",
-                "ip_same_ua_page",
-                "ip_page_click_time_avg",
-                "ip_reqs_referer",
-                "ip_dyn_reqs_pages",
-                "dev_with_ips",
-                "ip_dyn_post_reqs"
-            ],
-            "redis": [
-                {
-                    "addr": "192.168.137.101:6379",
-                    "passwd": "123456",
-                    "db": 0,
-                    "sub": "channel01"
-                }
-            ]
-        }
-    ]
+    "numout": 2,
+    "input": [{
+        "hkeysplit": "_",
+        "hkey": [
+            "grpid",
+            "host",
+            "ts"
+        ],
+        "split": "|",
+        "cols":[
+            "total",
+            "t_5xx",
+            "t_disc_uri",
+            "t_disc_ua",
+            "t_4xx",
+            "t_5xx",
+            "t_hit_waf"
+        ],
+        "redis": [{
+            "addr": "127.0.0.1:6379",
+            "passwd": "",
+            "db": 6,
+            "sub": "pub01"
+        }]
+    }],
+    "stat": [{
+        "statspolicys": [{
+                "desc": "IP请求量【5m】",
+                "name": "ip_total_5m",
+                "expr": "SUM(ip, total, 5)"
+            },
+            {
+                "desc": "FID请求量【5m】",
+                "name": "fid_total_5m",
+                "expr": "SUM(fid, total, 5)"
+            },
+            {
+                "desc": "HOST请求量【5m】",
+                "name": "all_total_5m",
+                "expr": "SUM(all, total, 5)"
+            },
+            {
+                "desc": "IP平均请求量【5m】",
+                "name": "ip_total_avg_5m",
+                "expr": "AVG(ip, total, 5)"
+            }
+        ],
+        "riskpolicys": [{
+                "name": "IP_RATIO_REQS_5M",
+                "desc": "IP请求数HOST占比",
+                "logic": "and",
+                "rules": [{
+                        "desc": "IP请求量【5m】> 1",
+                        "expr": "GT(ip_total_5m, 1)"
+                    },
+                    {
+                        "desc": "IP请求数HOST占比【5m】 = 0",
+                        "expr": "GT(ip_total_5m/all_total_5m,0.1)"
+                    }
+                ]
+            },
+            {
+                "name": "FID_RATIO_REQS_5M",
+                "desc": "FID请求数HOST占比",
+                "logic": "and",
+                "rules": [{
+                        "desc": "FID请求量【5m】> 50",
+                        "expr": "GT(fid_total_5m, 50)"
+                    },
+                    {
+                        "desc": "FID请求数HOST占比【5m】 = 0",
+                        "expr": "EQ(fid_total_5m/all_total_5m,0.5)"
+                    }
+                ]
+            },
+            {
+                "name": "IP_AVG_REQS_5M",
+                "desc": "大量IP请求量【5m】",
+                "logic": "and",
+                "rules": [{
+                    "desc": "IP平均请求量【5m】> 1",
+                    "expr": "GT(ip_total_avg_5m, 1)"
+                }]
+            }
+        ]
+    }],
+    "output": [{
+        "hash": true,
+        "redis": [{
+                "addr": "127.0.0.1:6379",
+                "passwd": "",
+                "db": 7 
+            }
+        ]
+    }]
 }
