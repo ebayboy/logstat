@@ -9,28 +9,31 @@
 
 using namespace std;
 using namespace nlohmann;
-
-
-class RiskRule
+class StatsPolicy
 {
 public:
-    RiskRule(){};
-    RiskRule(string desc, string expr) : desc(desc), expr(expr){};
-    ~RiskRule(){};
+    StatsPolicy() = default;
+    StatsPolicy(string name, string desc, string expr) : name(name), desc(desc), expr(expr){};
+    ~StatsPolicy() = default;
 
-    friend void to_json(nlohmann::json &j, const RiskRule &p)
+    friend void to_json(nlohmann::json &j, const StatsPolicy &p)
     {
         j = json{
-            {"expr", p.expr},
-            {"desc", p.desc}};
+            {"name", p.name},
+            {"desc", p.desc},
+            {"expr", p.expr}};
     }
-    friend void from_json(const nlohmann::json &j, RiskRule &p)
+
+    friend void from_json(const nlohmann::json &j, StatsPolicy &p)
     {
+        j.at("name").get_to(p.name);
         j.at("desc").get_to(p.desc);
         j.at("expr").get_to(p.expr);
     }
-    friend ostream &operator<<(ostream &output, const RiskRule &b)
+
+    friend ostream &operator<<(ostream &output, const StatsPolicy &b)
     {
+        cout << "name:" << b.name << endl;
         cout << "desc:" << b.desc << endl;
         cout << "expr:" << b.expr << endl;
 
@@ -38,79 +41,33 @@ public:
     }
 
 private:
-    string desc;
-    string expr;
-};
-
-class RiskPolicy
-{
-public:
-    RiskPolicy(){};
-    RiskPolicy(string name, string desc, string logic, vector<RiskRule> rules) : name(name), desc(desc), logic(logic), rules(rules){};
-    ~RiskPolicy(){};
-
-    friend class RiskRule;
-    friend void to_json(nlohmann::json &j, const RiskPolicy &p)
-    {
-        j = json{
-            {"name", p.name},
-            {"desc", p.desc},
-            {"logic", p.logic},
-            {"rules", p.rules}};
-    }
-
-    friend void from_json(const nlohmann::json &j, RiskPolicy &p)
-    {
-        j.at("name").get_to(p.name);
-        j.at("desc").get_to(p.desc);
-        j.at("logic").get_to(p.logic);
-        j.at("rules").get_to(p.rules);
-    }
-    friend ostream &operator<<(ostream &output, const RiskPolicy &b)
-    {
-        cout << "name:" << b.name << endl;
-        cout << "desc:" << b.desc << endl;
-        cout << "logic:" << b.logic << endl;
-
-        for (auto &&i : b.rules)
-        {
-            cout << i << endl;
-        }
-
-        return output;
-    }
-
-private:
     string name;
     string desc;
-    string logic;
-    vector<RiskRule> rules;
+    string expr;
 };
 
 class RiskCompute
 {
 public:
-    friend class RiskPolicy;
+    friend class StatsPolicy;
     RiskCompute(){};
-    RiskCompute(vector<RiskPolicy> r) :  riskpolicys(r){};
+    RiskCompute(vector<StatsPolicy> statspolicys) : statspolicys(statspolicys){};
     ~RiskCompute(){};
 
     friend void to_json(nlohmann::json &j, const RiskCompute &p)
     {
-        j = json{
-            {"riskpolicys", p.riskpolicys}};
+        j = json{{"statspolicys", p.statspolicys}};
     }
 
     friend void from_json(const nlohmann::json &j, RiskCompute &p)
     {
-        j.at("riskpolicys").get_to(p.riskpolicys);
+        j.at("statspolicys").get_to(p.statspolicys);
     }
 
     friend ostream &operator<<(ostream &output, const RiskCompute &b)
     {
-   
 
-        for (auto &&i : b.riskpolicys)
+        for (auto &&i : b.statspolicys)
         {
             cout << i << endl;
         }
@@ -119,7 +76,7 @@ public:
     }
 
 private:
-    vector<RiskPolicy> riskpolicys;
+    vector<StatsPolicy> statspolicys;
 };
 
 #endif // !__RiskCompute_HPP_

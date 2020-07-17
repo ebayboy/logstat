@@ -68,7 +68,12 @@ public:
     ~RiskInput(){};
     friend void to_json(nlohmann::json &j, const RiskInput &p)
     {
-        //j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
+        j = json{
+            {"hkeysplit", p.hkeysplit},
+            {"split", p.split},
+            {"hkey", p.hkey},
+            {"cols", p.cols},
+            {"redis", p.redis}};
     }
 
     friend void from_json(const nlohmann::json &j, RiskInput &p)
