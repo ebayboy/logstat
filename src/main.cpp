@@ -20,7 +20,6 @@
 using json = nlohmann::json;
 using namespace std;
 
-
 static void startRedisSub()
 {
     cout << "thread start ..." << endl;
@@ -30,60 +29,92 @@ static void startRedisSub()
     cout << "thread over ..." << endl;
 }
 
-static void runTestCase(int argc, char **argv)
+static void testOther()
 {
-	string c = "../conf/riskstat.json";
-	string d;
 
-    readargs(argc, argv, c, d);
-
-    cout << "config:" << c << endl;
-    cout << "domain:" << d << endl;
-
+#if 0
     /* code */
     cout << "riskstat start..." << endl;
 
-	//redisHelperTestInsertData();
-	
-	//vector<string> items;
+    //redisHelperTestInsertData();
 
-	size_t hostSize = std::stoi(d);
+    //vector<string> items;
 
-	cout << "hostSize:" << hostSize << endl;
+    //size_t hostSize = std::stoi(d);
 
-	pubStrContent(hostSize);
+    cout << "hostSize:" << hostSize << endl;
 
-	/*
+    pubStrContent(hostSize);
+
+    /*
 	hgetallContent("grp00_t.com.0_1590977640", items);
 	for (auto i : items) {
 		cout << i << endl;
 	}
 	*/
 
-	exit(0);
-
     //redisHelperPublish();
+#endif
 }
 
-int main(int argc, char * const argv[])
+static void runTestCase(int argc, char **argv)
 {
-    func();
-
-#if 0
-	runTestCase();
-#endif
-
     string c = "../conf/riskstat.json";
-	string d;
+    string d;
 
     readargs(argc, argv, c, d);
 
     cout << "config:" << c << endl;
+    cout << "domain:" << d << endl;
+}
 
-    /* code */
+class RiskStat
+{
+public:
+    RiskStat(string cfgName) ;
+    
+    friend ostream &operator<<(ostream &output, const RiskStat &b)
+    {
+        output << "cfgName:" << b.cfgName << endl;
+        output << "json.dump:" << b.j.dump() << endl;
+
+        return output;
+    }
+
+private:
+    RiskConfig *rc = nullptr;
+    json j;
+    string cfgName;
+};
+
+RiskStat::RiskStat(string cfgName) : cfgName(cfgName)
+{
+    ifstream fs(cfgName);
+    if (fs.bad())
+    {
+        cerr << "Error: open file failed!" << endl;
+        return;
+    }
+
+    fs >> this->j;
+
+    fs.close();
+};
+
+int main(int argc, char *const argv[])
+{
+    string c = "../conf/riskstat.json";
+    string d;
+    readargs(argc, argv, c, d);
+
+    cout << "config:" << c << endl;
+
+    RiskStat r(c);
+
+    cout << "RiskStat: " << r << endl;
+
+ /* code */
     cout << "riskstat start..." << endl;
-
-    RiskConfig riskCfg(c);
 
     return 0;
 }

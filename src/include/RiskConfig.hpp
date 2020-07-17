@@ -10,12 +10,15 @@
 #include "RiskInput.hpp"
 
 using namespace std;
+using namespace nlohmann;
 
 class RiskConfig
 {
 public:
     friend class RiskInput;
+    RiskConfig() {};
     RiskConfig(string cfgName);
+    RiskConfig(int numstat, vector<RiskInput> input){};
     ~RiskConfig();
 
     friend ostream &operator<<(ostream &output, const RiskConfig &b)
@@ -24,49 +27,33 @@ public:
 
         return output;
     }
+    friend void to_json(json &j, const RiskConfig &p)
+    {
+        j = json{
+            {"numstat", p.numstat},
+            {"input", p.input}};
+    }
+
+    friend void from_json(const json &j, RiskConfig &p)
+    {
+        j.at("numstat").get_to(p.numstat);
+        j.at("input").get_to(p.input);
+    }
 
 private:
     int numstat;
-    std::vector<RiskInput> inputs;
+    vector<RiskInput> input;
 };
 
-RiskConfig::RiskConfig(std::string cfgName)
+RiskConfig::RiskConfig(string cfgName)
 {
-    nlohmann::json j;
-    std::ifstream fs(cfgName);
+  #if 0 
 
-    cout << "RiskConfig..." << endl;
+    auto r = j.get<RiskConfig>();
 
-    if (fs.bad())
-    {
-        cerr << "Error: open file failed!" << endl;
-        return;
-    }
 
-    fs >> j;
-    //numstat
-    cout << "js.dump:" << j.dump() << endl;
-
-#if 0
-    this->numstat = j["numstat"];
-    cout << "numstat:" << this->numstat << endl;
-
-    /*
-    namespace ns {
-        struct person {
-            std::string name;
-            std::string address;
-            int age;
-        };
-    }
-    ns::person p {
-    j["name"].get<std::string>(),
-    j["address"].get<std::string>(),
-    j["age"].get<int>()
-    };
-    */
-    auto jInputs = j["input"];
-    for (auto it = j["input"].begin(); it != jInputs.end(); it++)
+    auto jinput = j["input"];
+    for (auto it = j["input"].begin(); it != jinput.end(); it++)
     {
         //parse input
         cout << "key:" << it.key() << endl;
@@ -76,9 +63,7 @@ RiskConfig::RiskConfig(std::string cfgName)
 
         };
 
-        from_json(j["input"], input);
-
-        this->inputs.push_back(input);
+        this->input.push_back(input);
     }
 #endif
 }
