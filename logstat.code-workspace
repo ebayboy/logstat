@@ -68,6 +68,7 @@
 			"xutility": "cpp"
 		},
 		"files.exclude": {
+			"**/*.a": true,
 			"**/*.d": true,
 			"**/*.exe": true,
 			"**/*.o": true
