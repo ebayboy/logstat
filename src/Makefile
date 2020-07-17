@@ -37,6 +37,6 @@ $(TARGET): $(ROOT_OBJS) $(SUB_OBJS)
 	$(CC) -c -g $< $(INCLUDES) $(CFLAGS) -o $@ -MD -MF $*.d -MP
 
 clean:
-	rm -f $(OBJS) $(ROOT_OBJS) *.d $(SUB_DIRS)/*.d $(TARGET)*
+	rm $(TARGET) $(ROOT_OBJS) $(SUB_OBJS)  $(DEPS)
 
 -include $(DEPS)
