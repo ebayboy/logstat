@@ -193,6 +193,7 @@
     ],
     "output": [
         {
+            "prefix": "grp_",
             "hash": true,
             "redis": [
                 {
