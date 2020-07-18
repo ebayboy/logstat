@@ -5,51 +5,11 @@
 #include <string>
 #include <vector>
 
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
+#include "RiskRedis.hpp"
 
 using namespace std;
 using namespace nlohmann;
-
-class RiskRedis
-{
-public:
-    RiskRedis(){};
-    RiskRedis(std::string addr, std::string passwd, int db, std::string sub) : addr(addr), passwd(passwd), db(db), sub(sub){};
-
-    friend void to_json(nlohmann::json &j, const RiskRedis &p)
-    {
-        j = nlohmann::json{
-            {"addr", p.addr},
-            {"passwd", p.passwd},
-            {"db", p.db},
-            {"sub", p.sub},
-        };
-    }
-
-    friend void from_json(const nlohmann::json &j, RiskRedis &p)
-    {
-        j.at("addr").get_to(p.addr);
-        j.at("passwd").get_to(p.passwd);
-        j.at("db").get_to(p.db);
-        j.at("sub").get_to(p.sub);
-    }
-
-    friend ostream &operator<<(ostream &output, const RiskRedis &b)
-    {
-        cout << "addr:" << b.addr << endl;
-        cout << "passwd:" << b.passwd << endl;
-        cout << "db:" << b.db << endl;
-        cout << "sub:" << b.sub << endl;
-
-        return output;
-    }
-
-private:
-    std::string addr;
-    std::string passwd;
-    int db = 0;
-    std::string sub;
-};
 
 class RiskInput
 {

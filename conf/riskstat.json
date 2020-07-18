@@ -23,7 +23,8 @@
             "addr": "127.0.0.1:6379",
             "passwd": "",
             "db": 6,
-            "sub": "pub01"
+            "sub": "pub01",
+            "pub": ""
         }]
     }],
     "stat": [{
@@ -84,6 +85,18 @@
                     "desc": "IP平均请求量【5m】> 1",
                     "expr": "GT(ip_total_avg_5m, 1)"
                 }]
+            }
+        ]
+    }],
+    "output": [{
+        "prefix": "grp_",
+        "hash": true,
+        "redis": [{
+                "addr": "127.0.0.1:6379",
+                "passwd": "",
+                "db": 7,
+                "pub":"",
+                "sub":""
             }
         ]
     }]
