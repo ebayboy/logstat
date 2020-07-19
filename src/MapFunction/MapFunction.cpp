@@ -7,6 +7,7 @@
 
 using namespace std;
 
+template<class x, class y>
 class MapFunction
 {
 
@@ -24,7 +25,7 @@ public:
         this->RegisteFunc("GE", [](float x, float y) { return x >= y; });
         this->RegisteFunc("LE", [](float x, float y) { return x <= y; });
 
-        this->RegisteFunc("and", [](vector<bool> v) { std::accumulate(v.begin(), v.end(), [](bool x, bool y) { return x & y; }) });
+        this->RegisteFunc("and", [](vector<bool> v) { std::accumulate(v.begin(), v.end(), [](bool x, bool y) { return x & y; }); });
     };
 
     ~MapFunction(){};
