@@ -27,9 +27,24 @@ public:
 
     friend void from_json(const nlohmann::json &j, StatsPolicy &p)
     {
-        j.at("name").get_to(p.name);
-        j.at("desc").get_to(p.desc);
-        j.at("expr").get_to(p.expr);
+        try
+        {
+            j.at("name").get_to(p.name);
+            j.at("desc").get_to(p.desc);
+            j.at("expr").get_to(p.expr);
+        }
+        catch (const json::parse_error &)
+        {
+            // parse errors are ok, because input may be random bytes
+        }
+        catch (const json::type_error &)
+        {
+            // type errors can occur during parsing, too
+        }
+        catch (const json::out_of_range &)
+        {
+            // out of range errors can occur during parsing, too
+        }
     }
 
     friend ostream &operator<<(ostream &output, const StatsPolicy &b)
@@ -62,8 +77,23 @@ public:
     }
     friend void from_json(const nlohmann::json &j, RiskRule &p)
     {
-        j.at("desc").get_to(p.desc);
-        j.at("expr").get_to(p.expr);
+        try
+        {
+            j.at("desc").get_to(p.desc);
+            j.at("expr").get_to(p.expr);
+        }
+        catch (const json::parse_error &)
+        {
+            // parse errors are ok, because input may be random bytes
+        }
+        catch (const json::type_error &)
+        {
+            // type errors can occur during parsing, too
+        }
+        catch (const json::out_of_range &)
+        {
+            // out of range errors can occur during parsing, too
+        }
     }
     friend ostream &operator<<(ostream &output, const RiskRule &b)
     {
@@ -97,10 +127,25 @@ public:
 
     friend void from_json(const nlohmann::json &j, RiskPolicy &p)
     {
-        j.at("name").get_to(p.name);
-        j.at("desc").get_to(p.desc);
-        j.at("logic").get_to(p.logic);
-        j.at("rules").get_to(p.rules);
+        try
+        {
+            j.at("name").get_to(p.name);
+            j.at("desc").get_to(p.desc);
+            j.at("logic").get_to(p.logic);
+            j.at("rules").get_to(p.rules);
+        }
+        catch (const json::parse_error &)
+        {
+            // parse errors are ok, because input may be random bytes
+        }
+        catch (const json::type_error &)
+        {
+            // type errors can occur during parsing, too
+        }
+        catch (const json::out_of_range &)
+        {
+            // out of range errors can occur during parsing, too
+        }
     }
     friend ostream &operator<<(ostream &output, const RiskPolicy &b)
     {
@@ -140,8 +185,14 @@ public:
 
     friend void from_json(const nlohmann::json &j, RiskCompute &p)
     {
-        j.at("statspolicys").get_to(p.statspolicys);
-        j.at("riskpolicys").get_to(p.riskpolicys);
+        try
+        {
+            j.at("statspolicys").get_to(p.statspolicys);
+            j.at("riskpolicys").get_to(p.riskpolicys);
+        }
+        catch (json::out_of_range &)
+        {
+        }
     }
 
     friend ostream &operator<<(ostream &output, const RiskCompute &b)

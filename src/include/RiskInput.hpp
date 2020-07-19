@@ -38,11 +38,14 @@ public:
 
     friend void from_json(const nlohmann::json &j, RiskInput &p)
     {
+        try {
         j.at("hkeysplit").get_to(p.hkeysplit);
         j.at("split").get_to(p.split);
         j.at("hkey").get_to(p.hkey);
         j.at("cols").get_to(p.cols);
         j.at("redis").get_to(p.redis);
+        } catch (const json::out_of_range &) {
+        }
     }
 
     friend ostream &operator<<(ostream &output, const RiskInput &b)

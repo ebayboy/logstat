@@ -68,10 +68,14 @@ public:
 
     friend void from_json(const json &j, RiskConfig &p)
     {
+        try {
         j.at("numstat").get_to(p.numstat);
         j.at("input").get_to(p.input);
         j.at("stat").get_to(p.stat);
         j.at("output").get_to(p.output);
+        } catch (json::out_of_range &) {
+
+        }
     }
 
 private:

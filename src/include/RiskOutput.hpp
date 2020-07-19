@@ -29,9 +29,15 @@ public:
 
     friend void from_json(const nlohmann::json &j, RiskOutput &p)
     {
-        j.at("prefix").get_to(p.prefix);
-        j.at("hash").get_to(p.hash);
-        j.at("redis").get_to(p.redis);
+        try
+        {
+            j.at("prefix").get_to(p.prefix);
+            j.at("hash").get_to(p.hash);
+            j.at("redis").get_to(p.redis);
+        }
+        catch (const json::out_of_range &)
+        {
+        }
     }
 
     friend ostream &operator<<(ostream &output, const RiskOutput &b)

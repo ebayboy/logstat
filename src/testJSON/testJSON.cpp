@@ -10,7 +10,6 @@
 using namespace std;
 using namespace nlohmann;
 
-
 struct person
 {
     std::string name;
@@ -46,9 +45,15 @@ static void to_json(json &j, const person &p)
 
 static void from_json(const json &j, person &p)
 {
-    j.at("name").get_to(p.name);
-    j.at("address").get_to(p.address);
-    j.at("age").get_to(p.age);
+    try
+    {
+        j.at("name").get_to(p.name);
+        j.at("address").get_to(p.address);
+        j.at("age").get_to(p.age);
+    }
+    catch (const json::out_of_range &)
+    {
+    }
 }
 
 static void testStruct()
@@ -76,19 +81,18 @@ static void testStruct()
     //assert(p == p2);
 }
 
-
 // ================================= TEST CLASS ===========================================
 class CPerson
 {
 public:
-    CPerson(){};  // used by from json
+    CPerson(){}; // used by from json
     CPerson(string name, string address, int age)
     {
         this->name = name;
         this->address = address;
         this->age = age;
     }
-    
+
     friend ostream &operator<<(ostream &output, const CPerson &b)
     {
         output << "name:" << b.name << endl;
@@ -98,20 +102,26 @@ public:
         return output;
     }
 
-    // Person p = json j;
-    #if 0
+// Person p = json j;
+#if 0
     friend void to_json(json &j, const CPerson &p)
     {
         j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
     }
-    #endif
+#endif
 
     //json j = Person{};
     friend void from_json(const json &j, CPerson &p)
     {
-        j.at("name").get_to(p.name);
-        j.at("address").get_to(p.address);
-        j.at("age").get_to(p.age);
+        try
+        {
+            j.at("name").get_to(p.name);
+            j.at("address").get_to(p.address);
+            j.at("age").get_to(p.age);
+        }
+        catch (const json::out_of_range &)
+        {
+        }
     }
 
 private:
@@ -133,9 +143,9 @@ static void testClass()
     json j = p;
 
     std::cout << j << std::endl;
-    #endif
+#endif
     //json j = "{\"Ned Flanders\", \"744 Evergreen Terrace\", 60}";
-    json j =  "{\"address\":\"744 Evergreen Terrace\",\"age\":60,\"name\":\"Ned Flanders\"}"_json;
+    json j = "{\"address\":\"744 Evergreen Terrace\",\"age\":60,\"name\":\"Ned Flanders\"}"_json;
 
     // conversion: json -> person
     // from_json
