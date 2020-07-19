@@ -23,7 +23,7 @@ public:
             {"addr", p.addr},
             {"passwd", p.passwd},
             {"db", p.db},
-            {"pub", p.sub},
+            {"sub", p.sub},
             {"pub", p.pub}
         };
     }
