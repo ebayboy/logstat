@@ -12,7 +12,7 @@ ROOT_SRCS := $(wildcard *.cpp)
 ROOT_OBJS=$(ROOT_SRCS:.cpp=.o)
 
 #add modules
-MODULES   := func util redisHelper redisSubscriptHelper testRedisHelper
+MODULES   := func util redisHelper redisSubscriptHelper testRedisHelper MapFunction
 SUB_DIRS  := $(addprefix ./,$(MODULES))
 SUB_SRCS  := $(foreach sdir,$(SUB_DIRS),$(wildcard $(sdir)/*.cpp))
 SUB_OBJS=$(SUB_SRCS:.cpp=.o)

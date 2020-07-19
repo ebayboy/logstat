@@ -1,14 +1,21 @@
 
 TODO:
-- json to struct
-    + input 
-    + []compute
-    + []output
+#### 处理流程：
+- 接收sub信息
+- 读取redis数据
+- 计算
+- 输出
+- 多线程架构
 
 - compute 数学表达式解析计算
-    + SUM(ip, total, 5)  map + funccall
-    + GT(ip_total_5m/all_total_5m,0.1) 
+    + SUM/AVG(ip, total, 5)  map + funccall 
+        + start_end();  sep: ,
+        + val ip_total_5m
+    + EQ|GE|LE|GT|LT (ip_total_5m/all_total_5m,0.1)   sep:
         + 参数解析: ip_total_5m, all_total_5m, 0.1(LAST)
+        + start_end (); sep: ,  sep2 + / - *
+        + var: ip_total_5m, all_total_5m
+        + 获取变量的value
         + 计算ret = ip_total_5m/all_total_5m => 输入数据到参数中
         + 计算 GT => ret > 0.1
     + and (vector<int> rules)
@@ -23,6 +30,8 @@ Done:
 - cpp redis
 - cpp json lib
 - add libevent
+
+- json to struct
 
 #### 处理流程：
 - 接收sub信息
