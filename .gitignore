@@ -33,3 +33,4 @@ src/libs/*.a
 src/libs/libevent
 src/libs/hiredis
 src/logstat
+src/logstat
