@@ -6,7 +6,7 @@
 #include <string>
 #include <thread>
 
-#include "util/util.h"
+#include "util.hpp"
 #include "redisHelper/redisHelper.h"
 #include "redisSubscriptHelper/redisSubscriptHelper.h"
 
