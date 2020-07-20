@@ -1,12 +1,25 @@
 #include <iostream>
 #include <string>
-#include <map>
+#include <vector>
+
+#include "util/util.h"
 
 using namespace std;
 
-class ExpParse {
-    public:
+//AVG(ip, total, 5)
+//GT(ip_total_5m, 1)
+class ExpParse
+{
+public:
+    ExpParse() = default;
+    ExpParse(string exp, vector<string> sep);
+    ~ExpParse(){};
 
-    private:
+private:
+    string exp;
+    string field;
+    vector<string> vars;
+    vector<string> seps;
+    int lastVar;
 };
 

@@ -12,10 +12,10 @@ class MapFunction
 public:
     MapFunction()
     {
-        this->RegisteFunc("-", std::minus<float>());
-        this->RegisteFunc("+", std::plus<float>());
-        this->RegisteFunc("*", std::multiplies<float>());
-        this->RegisteFunc("/", std::divides<float>());
+        this->RegisteFunc("SUB", std::minus<float>());
+        this->RegisteFunc("SUM", std::plus<float>());
+        this->RegisteFunc("MUL", std::multiplies<float>());
+        this->RegisteFunc("AVG", std::divides<float>());
 
         this->RegisteFunc("EQ", [](float x, float y) { return x == y; });
         this->RegisteFunc("GT", [](float x, float y) { return x > y; });
