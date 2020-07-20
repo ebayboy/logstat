@@ -11,16 +11,13 @@ using namespace std;
 
 int main(int args, char **argv)
 {
-//ExpParse(string exp, vector<string> seps);
-#if 0
-    string exp = "AVG(ip, total, 5)";
-    ExpParse e("stat", exp);
-#else
-    string exp = "GT(ip_total_5m/all_total_5m,0.1)";
-    ExpParse e("risk", exp);
-#endif
+    //ExpParse(string exp, vector<string> seps);
+    ExpParse e("stat", "AVG(ip, total, 5)");
+    cout << "stat:" << e << endl;
 
-    cout << "e:" << e << endl;
+    ExpParse e1("risk", "GT(ip_total_5m/all_total_5m,0.1)");
+
+    cout << "e1:" << e1 << endl;
 
     return 0;
 }
