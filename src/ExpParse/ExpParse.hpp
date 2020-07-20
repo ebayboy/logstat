@@ -29,19 +29,19 @@ public:
                 temp += exp[i];
             }
         }
-
+        size_t startIdx = 0;
+        
         this->funcName = result.at(0);
+        startIdx++;
+
         this->lastVar = result.at(result.size() - 1);
 
         if (this->type.compare("stat") == 0)
         {
             this->statField = result.at(1);
-            this->vars.assign(result.begin() + 2, result.end() - 1);
+            startIdx++;
         }
-        else
-        {
-            this->vars.assign(result.begin() + 1, result.end() - 1);
-        }
+        this->vars.assign(result.begin() + startIdx, result.end() - 1);
     }
     ~ExpParse(){};
 
