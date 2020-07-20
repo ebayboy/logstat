@@ -38,9 +38,6 @@ public:
             j.at("sub").get_to(p.sub);
             j.at("pub").get_to(p.pub);
         }
-        catch (const exception &) {
-            // exception &
-        }
         catch (const json::parse_error &)
         {
             // parse errors are ok, because input may be random bytes

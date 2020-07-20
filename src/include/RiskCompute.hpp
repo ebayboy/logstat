@@ -5,21 +5,18 @@
 #include <string>
 #include <vector>
 
-#include <nlohmann/json.hpp>
-
-using namespace std;
-using namespace nlohmann;
+#include "nlohmann/json.hpp"
 
 class StatsPolicy
 {
 public:
     StatsPolicy() = default;
-    StatsPolicy(string name, string desc, string expr) : name(name), desc(desc), expr(expr){};
+    StatsPolicy(std::string name, std::string desc, std::string expr) : name(name), desc(desc), expr(expr){};
     ~StatsPolicy() = default;
 
     friend void to_json(nlohmann::json &j, const StatsPolicy &p)
     {
-        j = json{
+        j = nlohmann::json{
             {"name", p.name},
             {"desc", p.desc},
             {"expr", p.expr}};
@@ -33,15 +30,15 @@ public:
             j.at("desc").get_to(p.desc);
             j.at("expr").get_to(p.expr);
         }
-        catch (const json::parse_error &)
+        catch (const nlohmann::json::parse_error &)
         {
             // parse errors are ok, because input may be random bytes
         }
-        catch (const json::type_error &)
+        catch (const nlohmann::json::type_error &)
         {
             // type errors can occur during parsing, too
         }
-        catch (const json::out_of_range &)
+        catch (const nlohmann::json::out_of_range &)
         {
             // out of range errors can occur during parsing, too
         }
@@ -57,21 +54,21 @@ public:
     }
 
 private:
-    string name;
-    string desc;
-    string expr;
+    std::string name;
+    std::string desc;
+    std::string expr;
 };
 
 class RiskRule
 {
 public:
     RiskRule(){};
-    RiskRule(string desc, string expr) : desc(desc), expr(expr){};
+    RiskRule(std::string desc, std::string expr) : desc(desc), expr(expr){};
     ~RiskRule(){};
 
     friend void to_json(nlohmann::json &j, const RiskRule &p)
     {
-        j = json{
+        j = nlohmann::json{
             {"expr", p.expr},
             {"desc", p.desc}};
     }
@@ -82,15 +79,15 @@ public:
             j.at("desc").get_to(p.desc);
             j.at("expr").get_to(p.expr);
         }
-        catch (const json::parse_error &)
+        catch (const nlohmann::json::parse_error &)
         {
             // parse errors are ok, because input may be random bytes
         }
-        catch (const json::type_error &)
+        catch (const nlohmann::json::type_error &)
         {
             // type errors can occur during parsing, too
         }
-        catch (const json::out_of_range &)
+        catch (const nlohmann::json::out_of_range &)
         {
             // out of range errors can occur during parsing, too
         }
@@ -104,15 +101,16 @@ public:
     }
 
 private:
-    string desc;
-    string expr;
+    std::string desc;
+     std::string expr;
 };
 
 class RiskPolicy
 {
 public:
     RiskPolicy(){};
-    RiskPolicy(string name, string desc, string logic, vector<RiskRule> rules) : name(name), desc(desc), logic(logic), rules(rules){};
+    RiskPolicy( std::string name,  std::string desc,  std::string logic,  std::vector<RiskRule> rules) 
+    : name(name), desc(desc), logic(logic), rules(rules){};
     ~RiskPolicy(){};
 
     friend class RiskRule;
@@ -134,15 +132,15 @@ public:
             j.at("logic").get_to(p.logic);
             j.at("rules").get_to(p.rules);
         }
-        catch (const json::parse_error &)
+        catch (const nlohmann::json::parse_error &)
         {
             // parse errors are ok, because input may be random bytes
         }
-        catch (const json::type_error &)
+        catch (const nlohmann::json::type_error &)
         {
             // type errors can occur during parsing, too
         }
-        catch (const json::out_of_range &)
+        catch (const nlohmann::json::out_of_range &)
         {
             // out of range errors can occur during parsing, too
         }
@@ -162,9 +160,9 @@ public:
     }
 
 private:
-    string name;
-    string desc;
-    string logic;
+    std::string name;
+    std::string desc;
+    std::string logic;
     vector<RiskRule> rules;
 };
 class RiskCompute
@@ -179,7 +177,7 @@ public:
 
     friend void to_json(nlohmann::json &j, const RiskCompute &p)
     {
-        j = json{{"statspolicys", p.statspolicys},
+        j = nlohmann::json{{"statspolicys", p.statspolicys},
                  {"riskpolicys", p.riskpolicys}};
     }
 
@@ -190,7 +188,7 @@ public:
             j.at("statspolicys").get_to(p.statspolicys);
             j.at("riskpolicys").get_to(p.riskpolicys);
         }
-        catch (json::out_of_range &)
+        catch (nlohmann::json::out_of_range &)
         {
         }
     }
