@@ -30,6 +30,7 @@ TODO:
     + 输出结果到redis
 
 WillDo:
+- noexcept shared_ptr
 
 Done:
 #### libs:
@@ -45,9 +46,3 @@ Done:
 - 计算
 - 输出
 - 多线程架构
-
-
-
-11111
-
-2222
