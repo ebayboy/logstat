@@ -67,7 +67,9 @@
 			"xtree": "cpp",
 			"xutility": "cpp",
 			"ctime": "cpp",
-			"sstream": "cpp"
+			"sstream": "cpp",
+			"deque": "cpp",
+			"stack": "cpp"
 		},
 		"files.exclude": {
 			"**/*.a": true,

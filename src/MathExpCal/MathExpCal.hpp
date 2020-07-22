@@ -73,11 +73,11 @@ string MathExpCal::PreToPost(string exp)
     string result;    //保存输出后缀表达式
     stack<char> optr; //存放操作符  +-*/()
 
-    for (int i = 0; i < exp.size(); i++)
+    for (size_t i = 0; i < exp.size(); i++)
     {
         if (exp[i] == '(')
         {
-            optr.push(exp[i]); 
+            optr.push(exp[i]);
         }
         else if (exp[i] == ')')
         {
@@ -147,7 +147,7 @@ double MathExpCal::ExpressionCal(string str)
 
     str = PreToPost(str);
     double op1, op2, final_resl;
-    int i = 0;
+    size_t i = 0;
 
     while (i < str.size() - 1)
     {
