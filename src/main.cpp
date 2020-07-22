@@ -1,18 +1,16 @@
-#ifdef 0
+
 #include <iostream>
-#include <nlohmann/json.hpp>
+
 #include <fstream>
 #include <string>
 #include <thread>
-#else
-#include <bits/stdc++.h>  //万能C++头文件
-#endif
 
-#include "util.hpp"
+#include "nlohmann/json.hpp"
 #include "redisHelper/redisHelper.h"
 #include "redisSubscriptHelper/redisSubscriptHelper.h"
 
 #include "RiskConfig.hpp"
+#include "util.hpp"
 
 //for test
 #include "testRedisHelper.h"

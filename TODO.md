@@ -1,8 +1,6 @@
 
 TODO:
 - 增加异常处理try catch finally
-- snippet code 增加C++模板类（包含exception的处理、构造函数等/类自定义异常, 继承异常类）
-- snippet code上传到git hub上。
 - 集成日志模块
 
 #### 处理流程：
