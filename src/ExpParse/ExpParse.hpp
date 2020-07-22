@@ -1,9 +1,7 @@
 #ifndef __EXPPARSE_H__
 #define __EXPPARSE_H__
 
-#include <iostream>
-#include <string>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -65,7 +63,7 @@ public:
 
 private:
     string type;
-    string exp;
+    string exp;  //inOrder 
     string funcName;
     string statField;
     vector<string> vars;
