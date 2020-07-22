@@ -1,10 +1,12 @@
-
-
+#ifdef 0
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <string>
 #include <thread>
+#else
+#include <bits/stdc++.h>  //万能C++头文件
+#endif
 
 #include "util.hpp"
 #include "redisHelper/redisHelper.h"
