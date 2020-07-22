@@ -21,6 +21,8 @@ result  operator_stack
 5234-+*1-
 */
 
+//usage: MathExpCal m;
+
 #ifndef __MATHEXPCAL_h__
 #define __MATHEXPCAL_h__
 
