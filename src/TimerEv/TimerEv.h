@@ -1,5 +1,5 @@
-#ifndef _TIMER_EV_H_
-#define _TIMER_EV_H_
+#ifndef __TIMER_EV_H__
+#define __TIMER_EV_H__
 
 #include <EventImpl.h>
 #include <stdint.h>

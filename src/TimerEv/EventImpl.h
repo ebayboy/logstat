@@ -1,5 +1,7 @@
-#ifndef _EVENT_H_
-#define _EVENT_H_
+//EventImpl singleton
+
+#ifndef __EVENTIMPL_H__
+#define __EVENTIMPL_H__
 
 #include <event2/event.h>
 #include <event2/event_struct.h>
