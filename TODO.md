@@ -15,6 +15,8 @@ TODO:
   - ExpParse解决策略
   - stat策略计算 ExpParse + MathFunction
   - risk策略计算 ExpParse + MathExpCal
+  - 多线程框架
+  - libevent事件驱动
     + SUM/AVG(ip, total, 5)  map + funccall 
         + start_end();  sep: ,
         + val ip_total_5m
