@@ -12,6 +12,9 @@ TODO:
 - 多线程架构
 
 - compute 数学表达式解析计算
+  - ExpParse解决策略
+  - stat策略计算 ExpParse + MathFunction
+  - risk策略计算 ExpParse + MathExpCal
     + SUM/AVG(ip, total, 5)  map + funccall 
         + start_end();  sep: ,
         + val ip_total_5m

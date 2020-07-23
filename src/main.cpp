@@ -118,7 +118,7 @@ int main(int argc, char *const argv[])
     cout << "RiskStat: " << r << endl;
 
     /* code */
-    cout << "riskstat start..." << endl;
+    cout << "riskstat start ok!" << endl;
 
     return 0;
 }
