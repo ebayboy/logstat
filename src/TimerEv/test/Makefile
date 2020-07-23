@@ -1,10 +1,10 @@
 CC = g++
 LD = g++
 TARGET = test
-INCLUDES = -I../include
-LIB = -L./ -L../libs
+INCLUDES = -I./ -I../ -I../../include
+LIB = -L./ -L../../libs
 CFLAGS = -std=c++11 -Wall -levent
-SRC := $(wildcard *.cpp)
+SRC := $(wildcard *.cpp) $(wildcard ../*.cpp) 
 OBJS=$(SRC:.cpp=.o)
 #$(warning  DEPS: $(DEPS))
 .PHONY:all clean
