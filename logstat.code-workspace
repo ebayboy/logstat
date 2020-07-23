@@ -69,7 +69,10 @@
 			"ctime": "cpp",
 			"sstream": "cpp",
 			"deque": "cpp",
-			"stack": "cpp"
+			"stack": "cpp",
+			"resumable": "cpp",
+			"future": "cpp",
+			"queue": "cpp"
 		},
 		"files.exclude": {
 			"**/*.a": true,
@@ -77,12 +80,12 @@
 			"**/*.exe": true,
 			"**/*.o": true
 		},
-		"c-cpp-compile-run.cpp-flags": "-std=c++11 -I../include -L../lib",
+		"c-cpp-compile-run.cpp-flags": "-std=c++11 -I../include -L../libs -levent",
 		"code-runner.executorMap": {
 			"javascript": "node",
 			"java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
 			"c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-			"cpp": "cd $dir && g++ -std=c++11 -I../../include -L../../lib $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+			"cpp": "cd $dir && g++ -std=c++11 -I../../include -L../../libs $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
 			"objective-c": "cd $dir && gcc -framework Cocoa $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
 			"php": "php",
 			"python": "python -u",
