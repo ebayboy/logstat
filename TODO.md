@@ -2,6 +2,8 @@
 TODO:
 - 增加异常处理try catch finally
 - 集成日志模块
+- 多线程库学习
+- TimerEv学习
 
 #### 处理流程：
 - 接收sub信息
