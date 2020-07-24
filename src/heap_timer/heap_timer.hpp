@@ -10,6 +10,7 @@ using std::exception;
 class heap_timer;
 
 //采用数组实现最小堆， 最小堆实现timer
+//参考 ： https://blog.csdn.net/qq_39781096/article/details/107472152
 
 //定时器类
 class heap_timer
