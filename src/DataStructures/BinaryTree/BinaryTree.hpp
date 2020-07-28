@@ -33,9 +33,10 @@ public:
     int Max();             //最大值
     int Min();             //最小值
     int PreNode(int data); //前驱结点
+    int PostNode(int data); //后继节点
+
 
     //TODO
-    int PostNode(int data); //后继节点
     int Floor(int data);    //向下取整
     int Ceilling(int data); //向上取整
     void RemoveAll();       //删除树
