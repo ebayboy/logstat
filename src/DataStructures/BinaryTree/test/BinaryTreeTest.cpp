@@ -47,5 +47,10 @@ int main(int args, char **argv)
 
     cout << "Ceilling(19):" << b.Ceilling(19) << endl;
 
+    b.RemoveAll();
+    cout << "RemoveAll InOrder:" << endl;
+    b.InOrder();
+
+
     return 0;
 }
