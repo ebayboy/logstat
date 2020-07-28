@@ -11,6 +11,7 @@ struct BinaryNode
     int data;
     BinaryNode *left;
     BinaryNode *right;
+    BinaryNode *parent;
 
     //struct constructor
     BinaryNode() : data(0), left(nullptr), right(nullptr){};
@@ -90,12 +91,27 @@ int BinaryTree::__PostNode(BinaryNode *proot, int data)
         return -1;
     // not found data
 
-    //2.1 have right child tree
+    //1. have right child tree
     if (p->right)
         return __Min(p->right);
 
-    if (pp->left == p)
-        return pp->data;
+    //若该节点node没有右子树，则沿着parent节点一次往上找，
+    //直至parent的左节点==node节点，
+    //那么parent就是node的后继节点向上
+    while (p)
+    {
+        if (p->parent == nullptr || p->parent->left == nullptr)
+        {
+            continue;
+        }
+        printf("p->parent:%d left:%d\n", p->parent, p->parent->left);
+
+        if (p->parent->left == p)
+        {
+            return p->parent->data;
+        }
+        p = p->parent;
+    }
 
     return -1;
 }
@@ -219,10 +235,12 @@ BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
     if (data < proot->data)
     {
         proot->left = __InsertNode(proot->left, data);
+        proot->left->parent = proot;
     }
     else if (data > proot->data)
     {
         proot->right = __InsertNode(proot->right, data);
+        proot->right->parent = proot;
     }
 
     //相等不插入
@@ -257,6 +275,8 @@ void BinaryTree::__InOrder(BinaryNode *proot)
 
     __InOrder(proot->left);
     std::cout << " " << proot->data;
+    if (proot->parent)
+        printf("\n%d parent:%d\n", proot->data, proot->parent->data);
     __InOrder(proot->right);
 }
 
