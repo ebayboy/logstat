@@ -3,20 +3,24 @@
 
 #include <iostream>
 
-struct Node {
+struct Node
+{
     Node *left;
     Node *right;
     int value;
 };
 
-class Tree {
+class Tree
+{
+    Tree(){};
+    ~Tree(){};
     void Find(int key);
     void RemoveNode(int key);
-    int  Max();
+    int Max();
     int Min();
     int PreNode();
     int PostNode();
-    int Floor();  //向下取整
+    int Floor();    //向下取整
     int Ceilling(); //向上取整
     void RemoveAll();
 
