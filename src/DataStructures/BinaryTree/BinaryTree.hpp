@@ -2,6 +2,7 @@
 #define __BINARY_TREE_H__
 
 #include <iostream>
+#include <cstdlib>
 
 struct BinaryNode
 {
@@ -42,6 +43,8 @@ private:
     void __PreOrder(BinaryNode *proot);
     BinaryNode *__InsertNode(BinaryNode *proot, int data);
     BinaryNode *__FindNode(BinaryNode *proot, int data);
+    int __Max(BinaryNode *proot);
+    int __Min(BinaryNode *proot);
 
     BinaryNode *m_root;
     size_t m_size;
@@ -49,7 +52,32 @@ private:
 
 int BinaryTree::Max()
 {
-    return -1;
+    return __Max(m_root);
+}
+
+int BinaryTree::__Max(BinaryNode *proot)
+{
+    if (proot == nullptr)
+        return -1;
+    else if (proot->right)
+        return __Max(proot->right);
+    else
+        return proot->data;
+}
+
+int BinaryTree::Min()
+{
+    return __Min(m_root);
+}
+
+int BinaryTree::__Min(BinaryNode *proot)
+{
+    if (proot == nullptr)
+        return -1;
+    else if (proot->left)
+        return __Min(proot->left);
+    else
+        return proot->data;
 }
 
 BinaryTree::BinaryTree() : m_root(nullptr), m_size(0)

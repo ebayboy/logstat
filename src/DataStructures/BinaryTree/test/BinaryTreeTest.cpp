@@ -2,8 +2,7 @@
 
 #include "BinaryTree.hpp"
 
-using namespace  std;
-
+using namespace std;
 
 int main(int args, char **argv)
 {
@@ -33,6 +32,11 @@ int main(int args, char **argv)
     {
         cout << "not find n!" << endl;
     }
+    cout << endl;
+
+    cout << "Max:" << b.Max() << endl;
+
+    cout << "Min:" << b.Min() << endl;
 
     return 0;
 }
