@@ -1,11 +1,7 @@
 #ifndef __BINARY_TREE_H__
 #define __BINARY_TREE_H__
 
-
-
 #include <iostream>
-#include <string>
-#include <cstdio>
 
 struct BinaryNode
 {
@@ -26,8 +22,19 @@ public:
     void PostOrder();
     void InOrder();
     void PreOrder();
+
     void InsertNode(int data);
     BinaryNode *FindNode(int data);
+
+    //TODO
+    int Max();        //最大值
+    int Min();        //最小值
+    int PreNode();    //前驱结点
+    int PostNode();   //后继节点
+    int Floor();      //向下取整
+    int Ceilling();   //向上取整
+    void RemoveAll(); //删除树
+    void RemoveNode(int key);
 
 private:
     void __PostOrder(BinaryNode *proot);
@@ -39,6 +46,11 @@ private:
     BinaryNode *m_root;
     size_t m_size;
 };
+
+int BinaryTree::Max()
+{
+    return -1;
+}
 
 BinaryTree::BinaryTree() : m_root(nullptr), m_size(0)
 {
@@ -162,6 +174,5 @@ BinaryNode *BinaryTree::FindNode(int data)
 {
     return __FindNode(m_root, data);
 }
-
 
 #endif // !__BINARY_TREE_H__
