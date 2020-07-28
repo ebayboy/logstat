@@ -45,5 +45,7 @@ int main(int args, char **argv)
 
     cout << "Floor(19):" << b.Floor(19) << endl;
 
+    cout << "Ceilling(19):" << b.Ceilling(19) << endl;
+
     return 0;
 }

@@ -32,12 +32,14 @@ public:
 
     int Max();              //最大值
     int Min();              //最小值
+    
     int PreNode(int data);  //前驱结点
     int PostNode(int data); //后继节点
 
+    int Floor(int data);    //向下取整是指小于等于data的最小值
+    int Ceilling(int data); //向上取整是指大于data的最小键
+
     //TODO
-    int Floor(int data);    //向下取整是指小于等于该键的最小值
-    int Ceilling(int data); //向上取整是指大于等于该键的最小键
     void RemoveAll();       //删除树
     void RemoveNode(int key);
 
@@ -58,12 +60,44 @@ private:
     size_t m_size;
 };
 
+//向上取整是指>该键的最小键； data > proot->key
+int BinaryTree::Ceilling(int data)
+{
+    return __Ceilling(m_root, data);
+}
+
+int BinaryTree::__Ceilling(BinaryNode *proot, int data)
+{
+    if (proot == nullptr)
+        return -1;
+
+    if (proot->data <= data)
+    {
+        return __Ceilling(proot->right, data);
+    }
+    else
+    {
+        //proot->data > data: 有可能是Ceilling, 但是还要看左子树中值是否有>data, 如果有则更接近data
+        if (proot->left == nullptr)
+        {
+            return proot->data;
+        }
+        else
+        {
+            int tmp = __Ceilling(proot->left, data);
+            if (tmp == -1)
+                return proot->data;
+
+            return tmp;
+        }
+    }
+
+    return -1;
+}
+
 //向下取整是指小于等于该键的最小值。
 int BinaryTree::Floor(int data)
 {
-    if (m_root == nullptr)
-        return -1;
-
     return __Floor(m_root, data);
 }
 
