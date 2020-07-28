@@ -12,8 +12,10 @@ struct Node
 
 class Tree
 {
+public:
     Tree(){};
     ~Tree(){};
+    void Insert(int key);
     void Find(int key);
     void RemoveNode(int key);
     int Max();
@@ -23,10 +25,11 @@ class Tree
     int Floor();    //向下取整
     int Ceilling(); //向上取整
     void RemoveAll();
-
     void PreOrder();
     void InOrder();
     void PostOrder();
+
+private:
 };
 
 #endif // !__BINARY_TREE_H__
