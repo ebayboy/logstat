@@ -98,19 +98,10 @@ int BinaryTree::__PostNode(BinaryNode *proot, int data)
     //若该节点node没有右子树，则沿着parent节点一次往上找，
     //直至parent的左节点==node节点，
     //那么parent就是node的后继节点向上
-    while (p)
+    for (p; p && p->parent; p = p->parent)
     {
-        if (p->parent == nullptr || p->parent->left == nullptr)
-        {
-            continue;
-        }
-        printf("p->parent:%d left:%d\n", p->parent, p->parent->left);
-
-        if (p->parent->left == p)
-        {
+        if (p->parent->left && p->parent->left == p)
             return p->parent->data;
-        }
-        p = p->parent;
     }
 
     return -1;
