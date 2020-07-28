@@ -141,15 +141,15 @@ int BinaryTree::__PreNode(BinaryNode *proot, int data)
     if (p->left)
         return __Max(p->left);
 
-    if (pp->right == p)
+    if (pp && pp->right == p)
     {
         //2.2.1 is pp->right ?
         return pp->data;
     }
-    else if (pp->left == p)
+    else if (pp && pp->left == p)
     {
         //2.2.2 is pp->left ?
-        if (ppp->right == pp)
+        if (ppp && ppp->right == pp)
             return ppp->data;
     }
 
@@ -202,7 +202,6 @@ void BinaryTree::InsertNode(int data)
 BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
 {
     //find null node
-    printf("%s:%d data:%d proot:%p\n",  __func__, __LINE__, data, proot);
     if (proot == nullptr)
     {
         //new 不初始化， new()进行初始化
@@ -212,7 +211,6 @@ BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
             node->data = data;
             proot = node;
             m_size += 1;
-            printf("%s:%d %d size:%d\n", __func__, __LINE__, node->data, m_size);
         }
 
         return proot;
