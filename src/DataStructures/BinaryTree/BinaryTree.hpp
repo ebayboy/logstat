@@ -30,19 +30,20 @@ public:
     void InsertNode(int data);
     BinaryNode *FindNode(int data);
 
-    int Max();             //最大值
-    int Min();             //最小值
-    int PreNode(int data); //前驱结点
+    int Max();              //最大值
+    int Min();              //最小值
+    int PreNode(int data);  //前驱结点
     int PostNode(int data); //后继节点
 
-
     //TODO
-    int Floor(int data);    //向下取整
-    int Ceilling(int data); //向上取整
+    int Floor(int data);    //向下取整是指小于等于该键的最小值
+    int Ceilling(int data); //向上取整是指大于等于该键的最小键
     void RemoveAll();       //删除树
     void RemoveNode(int key);
 
 private:
+    int __Floor(BinaryNode *proot, int data);
+    int __Ceilling(BinaryNode *proot, int data);
     void __PostOrder(BinaryNode *proot);
     void __InOrder(BinaryNode *proot);
     void __PreOrder(BinaryNode *proot);
@@ -56,6 +57,44 @@ private:
     BinaryNode *m_root;
     size_t m_size;
 };
+
+//向下取整是指小于等于该键的最小值。
+int BinaryTree::Floor(int data)
+{
+    if (m_root == nullptr)
+        return -1;
+
+    return __Floor(m_root, data);
+}
+
+int BinaryTree::__Floor(BinaryNode *proot, int data)
+{
+    if (proot == nullptr)
+        return -1;
+
+    if (proot->data > data)
+    {
+        return __Floor(proot->left, data);
+    }
+    else
+    {
+        //proot->data : 有可能是floot, 但是还要看右子树中值是否有<=data, 如果有则更接近data
+        if (proot->right == nullptr)
+        {
+            return proot->data;
+        }
+        else
+        {
+            int tmp = __Floor(proot->right, data);
+            if (tmp == -1)
+                return proot->data;
+
+            return tmp;
+        }
+    }
+
+    return -1;
+}
 
 int BinaryTree::PostNode(int data)
 {

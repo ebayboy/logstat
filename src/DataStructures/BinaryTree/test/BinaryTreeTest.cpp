@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int args, char **argv)
 {
-    int a[] = {3,1,6,4,5};
+    int a[] = {41,27,11,10,13,29,65};
     BinaryTree b;
 
     for (size_t i = 0; i < sizeof(a) / sizeof(int); i++)
@@ -42,6 +42,8 @@ int main(int args, char **argv)
     cout << "PreNode(3):" << b.PreNode(3) << endl;
 
     cout << "PostNode(5):" << b.PostNode(5) << endl;
+
+    cout << "Floor(19):" << b.Floor(19) << endl;
 
     return 0;
 }
