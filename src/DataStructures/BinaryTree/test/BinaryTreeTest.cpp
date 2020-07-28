@@ -39,9 +39,9 @@ int main(int args, char **argv)
 
     cout << "Min:" << b.Min() << endl;
 
-    cout << "PreNode(3):" << b.PreNode(3) << endl;
+    cout << "PreNode(13):" << b.PreNode(13) << endl;
 
-    cout << "PostNode(5):" << b.PostNode(5) << endl;
+    cout << "PostNode(13):" << b.PostNode(13) << endl;
 
     cout << "Floor(19):" << b.Floor(19) << endl;
 

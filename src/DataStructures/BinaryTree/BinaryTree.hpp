@@ -41,7 +41,7 @@ public:
     int Ceilling(int data); //向上取整是指大于data的最小键
 
     void RemoveAll(); //删除树
-    
+
     //TODO
     void RemoveNode(int key);
 
@@ -175,21 +175,15 @@ int BinaryTree::__PostNode(BinaryNode *proot, int data)
     if (proot == nullptr)
         return -1;
 
-    BinaryNode *p = proot /* point to current */, *pp = nullptr;
+    BinaryNode *p = proot;
 
     //1. find data by loop
     while (p)
     {
         if (data < p->data)
-        {
-            pp = p;
             p = p->left;
-        }
         else if (data > p->data)
-        {
-            pp = p;
             p = p->right;
-        }
         else
             break; //find node
     }
@@ -226,23 +220,15 @@ int BinaryTree::__PreNode(BinaryNode *proot, int data)
     if (proot == nullptr)
         return -1;
 
-    BinaryNode *p = proot /* point to current */, *pp = nullptr /* point to parent */, *ppp = nullptr /* point to parent's parent */;
+    BinaryNode *p = proot;
 
     //1. find data by loop
     while (p)
     {
         if (data < p->data)
-        {
-            ppp = pp;
-            pp = p;
             p = p->left;
-        }
         else if (data > p->data)
-        {
-            ppp = pp;
-            pp = p;
             p = p->right;
-        }
         else
             break; //find node
     }
@@ -255,16 +241,19 @@ int BinaryTree::__PreNode(BinaryNode *proot, int data)
     if (p->left)
         return __Max(p->left);
 
-    if (pp && pp->right == p)
+    if (p->parent && p->parent->right == p)
     {
         //2.2.1 is pp->right ?
-        return pp->data;
+        return p->parent->data;
     }
-    else if (pp && pp->left == p)
+    else if (p->parent && p->parent->left == p)
     {
         //2.2.2 is pp->left ?
-        if (ppp && ppp->right == pp)
-            return ppp->data;
+        if (p->parent->parent)
+        {
+            if (p->parent->parent->right == p->parent)
+                return p->parent->parent->data;
+        }
     }
 
     return -1;
