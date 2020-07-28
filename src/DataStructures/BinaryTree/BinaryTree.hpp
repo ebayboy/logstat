@@ -27,14 +27,15 @@ public:
     void InsertNode(int data);
     BinaryNode *FindNode(int data);
 
+    int Max(); //最大值
+    int Min(); //最小值
+
     //TODO
-    int Max();        //最大值
-    int Min();        //最小值
-    int PreNode();    //前驱结点
-    int PostNode();   //后继节点
-    int Floor();      //向下取整
-    int Ceilling();   //向上取整
-    void RemoveAll(); //删除树
+    int PreNode(int data);  //前驱结点
+    int PostNode(int data); //后继节点
+    int Floor(int data);    //向下取整
+    int Ceilling(int data); //向上取整
+    void RemoveAll();       //删除树
     void RemoveNode(int key);
 
 private:
@@ -45,10 +46,67 @@ private:
     BinaryNode *__FindNode(BinaryNode *proot, int data);
     int __Max(BinaryNode *proot);
     int __Min(BinaryNode *proot);
+    int __PreNode(BinaryNode *proot, int data); //前驱结点
 
     BinaryNode *m_root;
     size_t m_size;
 };
+
+int BinaryTree::PreNode(int data)
+{
+    if (m_root == nullptr)
+        return -1;
+    return __PreNode(m_root, data);
+}
+
+int BinaryTree::__PreNode(BinaryNode *proot, int data)
+{
+    if (proot == nullptr)
+        return -1;
+
+    BinaryNode *p = proot /* point to current */, *pp = nullptr /* point to parent */, *ppp = nullptr /* point to parent's parent */;
+
+    //1. find data by loop
+    while (p)
+    {
+        if (data < p->data)
+        {
+            ppp = pp;
+            pp = p;
+            p = p->left;
+        }
+        else if (data > p->data)
+        {
+            ppp = pp;
+            pp = p;
+            p = p->right;
+        }
+        else
+            break; //find node
+    }
+
+    if (p == nullptr)
+        return -1;
+    // not found data
+
+    //2.1 have left child tree
+    if (p->left)
+        return __Max(p->left);
+
+    if (pp->right == p)
+    {
+        //2.2.1 is pp->right ?
+        return pp->data;
+    }
+    else if (pp->left == p)
+    {
+        //2.2.2 is pp->left ?
+        if (ppp->right == pp)
+            return ppp->data;
+    }
+
+    return -1;
+}
 
 int BinaryTree::Max()
 {
