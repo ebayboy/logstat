@@ -6,11 +6,12 @@ using namespace std;
 
 int main(int args, char **argv)
 {
-    int a[5] = {3,2,1,5,4};
+    int a[] = {3,2,1,5,4,7,6,8};
     BinaryTree b;
 
     for (size_t i = 0; i < sizeof(a) / sizeof(int); i++)
     {
+        std::cout << "insert:" << a[i] << endl;
         b.InsertNode(a[i]);
     }
 
@@ -39,6 +40,8 @@ int main(int args, char **argv)
     cout << "Min:" << b.Min() << endl;
 
     cout << "PreNode(1):" << b.PreNode(1) << endl;
+
+    cout << "PostNode(6):" << b.PostNode(6) << endl;
 
     return 0;
 }

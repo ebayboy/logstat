@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstdlib>
 
+// add shard_ptr
+
 struct BinaryNode
 {
     int data;
@@ -27,11 +29,11 @@ public:
     void InsertNode(int data);
     BinaryNode *FindNode(int data);
 
-    int Max(); //最大值
-    int Min(); //最小值
+    int Max();             //最大值
+    int Min();             //最小值
+    int PreNode(int data); //前驱结点
 
     //TODO
-    int PreNode(int data);  //前驱结点
     int PostNode(int data); //后继节点
     int Floor(int data);    //向下取整
     int Ceilling(int data); //向上取整
@@ -46,11 +48,57 @@ private:
     BinaryNode *__FindNode(BinaryNode *proot, int data);
     int __Max(BinaryNode *proot);
     int __Min(BinaryNode *proot);
-    int __PreNode(BinaryNode *proot, int data); //前驱结点
+    int __PreNode(BinaryNode *proot, int data);
+    int __PostNode(BinaryNode *proot, int data);
 
     BinaryNode *m_root;
     size_t m_size;
 };
+
+int BinaryTree::PostNode(int data)
+{
+    if (m_root == nullptr)
+        return -1;
+    return __PostNode(m_root, data);
+}
+
+int BinaryTree::__PostNode(BinaryNode *proot, int data)
+{
+    if (proot == nullptr)
+        return -1;
+
+    BinaryNode *p = proot /* point to current */, *pp = nullptr;
+
+    //1. find data by loop
+    while (p)
+    {
+        if (data < p->data)
+        {
+            pp = p;
+            p = p->left;
+        }
+        else if (data > p->data)
+        {
+            pp = p;
+            p = p->right;
+        }
+        else
+            break; //find node
+    }
+
+    if (p == nullptr)
+        return -1;
+    // not found data
+
+    //2.1 have right child tree
+    if (p->right)
+        return __Min(p->right);
+
+    if (pp->left == p)
+        return pp->data;
+
+    return -1;
+}
 
 int BinaryTree::PreNode(int data)
 {
@@ -154,6 +202,7 @@ void BinaryTree::InsertNode(int data)
 BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
 {
     //find null node
+    printf("%s:%d data:%d proot:%p\n",  __func__, __LINE__, data, proot);
     if (proot == nullptr)
     {
         //new 不初始化， new()进行初始化
@@ -163,12 +212,13 @@ BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
             node->data = data;
             proot = node;
             m_size += 1;
+            printf("%s:%d %d size:%d\n", __func__, __LINE__, node->data, m_size);
         }
 
         return proot;
     }
 
-    if (data < m_root->data)
+    if (data < proot->data)
     {
         proot->left = __InsertNode(proot->left, data);
     }
