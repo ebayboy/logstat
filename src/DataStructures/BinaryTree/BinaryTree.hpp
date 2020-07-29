@@ -154,7 +154,7 @@ void BinaryTree::__Remove(BinaryNode *proot, int key)
         if (p->parent)
         {
             if (p->parent->left == p)
-                p->parent->left == nullptr;
+                p->parent->left = nullptr;
             else
                 p->parent->right = nullptr;
         }
@@ -171,9 +171,9 @@ void BinaryTree::__Remove(BinaryNode *proot, int key)
             p->left->parent = p->parent; //set child's parent
 
             if (p->parent->left == p)
-                p->parent->left == p->left;
+                p->parent->left = p->left;
             else
-                p->parent->right == p->left;
+                p->parent->right = p->left;
         }
         else
         {
@@ -181,7 +181,7 @@ void BinaryTree::__Remove(BinaryNode *proot, int key)
             p->right->parent = p->parent;
 
             if (p->parent->left == p)
-                p->parent->left == p->right;
+                p->parent->left = p->right;
             else
                 p->parent->right = p->right;
         }
@@ -334,7 +334,7 @@ BinaryNode *BinaryTree::__PostNode(BinaryNode *proot, int key)
     //若该节点node没有右子树，则沿着parent节点一次往上找，
     //直至parent的左节点==node节点，
     //那么parent就是node的后继节点向上
-    for (p; p && p->parent; p = p->parent)
+    for (; p && p->parent; p = p->parent)
     {
         if (p->parent->left && p->parent->left == p)
             return p->parent;
