@@ -9,13 +9,13 @@
 
 struct BinaryNode
 {
-    int data;
+    int key;
     BinaryNode *left;
     BinaryNode *right;
     BinaryNode *parent;
 
     //struct constructor
-    BinaryNode() : data(0), left(nullptr), right(nullptr){};
+    BinaryNode() : key(0), left(nullptr), right(nullptr){};
 };
 
 class BinaryTree
@@ -28,40 +28,88 @@ public:
     void InOrder();
     void PreOrder();
 
-    void InsertNode(int data);
-    BinaryNode *FindNode(int data);
+    void InsertNode(int key);
+    BinaryNode *FindNode(int key);
 
     int Max(); //最大值
     int Min(); //最小值
 
-    int PreNode(int data);  //前驱结点
-    int PostNode(int data); //后继节点
+    int PreNode(int key);  //前驱结点
+    int PostNode(int key); //后继节点
 
-    int Floor(int data);    //向下取整是指小于等于data的最小值
-    int Ceilling(int data); //向上取整是指大于data的最小键
+    int Floor(int key);    //向下取整是指小于等于key的最小值
+    int Ceilling(int key); //向上取整是指大于key的最小键
 
     void RemoveAll(); //删除树
-
-    //TODO
-    void RemoveNode(int key);
+    void Remove(int key);
 
 private:
+    void __Remove(BinaryNode *proot, int key);
     BinaryNode *__RemoveAll(BinaryNode *proot);
-    int __Floor(BinaryNode *proot, int data);
-    int __Ceilling(BinaryNode *proot, int data);
+    int __Floor(BinaryNode *proot, int key);
+    int __Ceilling(BinaryNode *proot, int key);
     void __PostOrder(BinaryNode *proot);
     void __InOrder(BinaryNode *proot);
     void __PreOrder(BinaryNode *proot);
-    BinaryNode *__InsertNode(BinaryNode *proot, int data);
-    BinaryNode *__FindNode(BinaryNode *proot, int data);
+    BinaryNode *__InsertNode(BinaryNode *proot, int key);
+    BinaryNode *__FindNode(BinaryNode *proot, int key);
     int __Max(BinaryNode *proot);
     int __Min(BinaryNode *proot);
-    int __PreNode(BinaryNode *proot, int data);
-    int __PostNode(BinaryNode *proot, int data);
+    int __PreNode(BinaryNode *proot, int key);
+    int __PostNode(BinaryNode *proot, int key);
 
     BinaryNode *m_root;
     size_t m_size;
 };
+
+void BinaryTree::Remove(int key)
+{
+    return __Remove(m_root, key);
+}
+
+void BinaryTree::__Remove(BinaryNode *proot, int key)
+{
+    BinaryNode *p = proot;
+    if (proot == nullptr)
+        return;
+
+    //find node
+    while (p && p->key != key)
+    {
+        if (key < proot->key)
+            p = p->left;
+        else
+            p = p->right;
+    }
+
+    if (p == nullptr)
+        return;
+
+    //don't have child
+    if (p->left == nullptr && p->right == nullptr)
+        delete p;
+
+    //have one child, set child->parent to it's parent
+    if (p->left == nullptr || p->right == nullptr)
+    {
+        if (p->left)
+        {
+            if (p->parent->left == p)
+                p->parent->left == p->left;
+            else
+                p->parent->right == p->left;
+        }
+        else
+        {
+            if (p->parent->left == p)
+                p->parent->left == p->right;
+            else
+                p->parent->right == p->right;
+        }
+    }
+
+    //p have tow child
+}
 
 void BinaryTree::RemoveAll()
 {
@@ -93,33 +141,33 @@ BinaryNode *BinaryTree::__RemoveAll(BinaryNode *proot)
     return proot;
 }
 
-//向上取整是指>该键的最小键； data > proot->key
-int BinaryTree::Ceilling(int data)
+//向上取整是指>该键的最小键； key > proot->key
+int BinaryTree::Ceilling(int key)
 {
-    return __Ceilling(m_root, data);
+    return __Ceilling(m_root, key);
 }
 
-int BinaryTree::__Ceilling(BinaryNode *proot, int data)
+int BinaryTree::__Ceilling(BinaryNode *proot, int key)
 {
     if (proot == nullptr)
         return -1;
 
-    if (proot->data <= data)
+    if (proot->key <= key)
     {
-        return __Ceilling(proot->right, data);
+        return __Ceilling(proot->right, key);
     }
     else
     {
-        //proot->data > data: 有可能是Ceilling, 但是还要看左子树中值是否有>data, 如果有则更接近data
+        //proot->key > key: 有可能是Ceilling, 但是还要看左子树中值是否有>key, 如果有则更接近key
         if (proot->left == nullptr)
         {
-            return proot->data;
+            return proot->key;
         }
         else
         {
-            int tmp = __Ceilling(proot->left, data);
+            int tmp = __Ceilling(proot->left, key);
             if (tmp == -1)
-                return proot->data;
+                return proot->key;
 
             return tmp;
         }
@@ -129,32 +177,32 @@ int BinaryTree::__Ceilling(BinaryNode *proot, int data)
 }
 
 //向下取整是指小于等于该键的最小值。
-int BinaryTree::Floor(int data)
+int BinaryTree::Floor(int key)
 {
-    return __Floor(m_root, data);
+    return __Floor(m_root, key);
 }
 
-int BinaryTree::__Floor(BinaryNode *proot, int data)
+int BinaryTree::__Floor(BinaryNode *proot, int key)
 {
     if (proot == nullptr)
         return -1;
 
-    if (proot->data > data)
+    if (proot->key > key)
     {
-        return __Floor(proot->left, data);
+        return __Floor(proot->left, key);
     }
     else
     {
-        //proot->data : 有可能是floot, 但是还要看右子树中值是否有<=data, 如果有则更接近data
+        //proot->key : 有可能是floot, 但是还要看右子树中值是否有<=key, 如果有则更接近key
         if (proot->right == nullptr)
         {
-            return proot->data;
+            return proot->key;
         }
         else
         {
-            int tmp = __Floor(proot->right, data);
+            int tmp = __Floor(proot->right, key);
             if (tmp == -1)
-                return proot->data;
+                return proot->key;
 
             return tmp;
         }
@@ -163,26 +211,26 @@ int BinaryTree::__Floor(BinaryNode *proot, int data)
     return -1;
 }
 
-int BinaryTree::PostNode(int data)
+int BinaryTree::PostNode(int key)
 {
     if (m_root == nullptr)
         return -1;
-    return __PostNode(m_root, data);
+    return __PostNode(m_root, key);
 }
 
-int BinaryTree::__PostNode(BinaryNode *proot, int data)
+int BinaryTree::__PostNode(BinaryNode *proot, int key)
 {
     if (proot == nullptr)
         return -1;
 
     BinaryNode *p = proot;
 
-    //1. find data by loop
+    //1. find key by loop
     while (p)
     {
-        if (data < p->data)
+        if (key < p->key)
             p = p->left;
-        else if (data > p->data)
+        else if (key > p->key)
             p = p->right;
         else
             break; //find node
@@ -190,7 +238,7 @@ int BinaryTree::__PostNode(BinaryNode *proot, int data)
 
     if (p == nullptr)
         return -1;
-    // not found data
+    // not found key
 
     //1. have right child tree
     if (p->right)
@@ -202,32 +250,32 @@ int BinaryTree::__PostNode(BinaryNode *proot, int data)
     for (p; p && p->parent; p = p->parent)
     {
         if (p->parent->left && p->parent->left == p)
-            return p->parent->data;
+            return p->parent->key;
     }
 
     return -1;
 }
 
-int BinaryTree::PreNode(int data)
+int BinaryTree::PreNode(int key)
 {
     if (m_root == nullptr)
         return -1;
-    return __PreNode(m_root, data);
+    return __PreNode(m_root, key);
 }
 
-int BinaryTree::__PreNode(BinaryNode *proot, int data)
+int BinaryTree::__PreNode(BinaryNode *proot, int key)
 {
     if (proot == nullptr)
         return -1;
 
     BinaryNode *p = proot;
 
-    //1. find data by loop
+    //1. find key by loop
     while (p)
     {
-        if (data < p->data)
+        if (key < p->key)
             p = p->left;
-        else if (data > p->data)
+        else if (key > p->key)
             p = p->right;
         else
             break; //find node
@@ -235,7 +283,7 @@ int BinaryTree::__PreNode(BinaryNode *proot, int data)
 
     if (p == nullptr)
         return -1;
-    // not found data
+    // not found key
 
     //2.1 have left child tree
     if (p->left)
@@ -244,7 +292,7 @@ int BinaryTree::__PreNode(BinaryNode *proot, int data)
     if (p->parent && p->parent->right == p)
     {
         //2.2.1 is pp->right ?
-        return p->parent->data;
+        return p->parent->key;
     }
     else if (p->parent && p->parent->left == p)
     {
@@ -252,7 +300,7 @@ int BinaryTree::__PreNode(BinaryNode *proot, int data)
         if (p->parent->parent)
         {
             if (p->parent->parent->right == p->parent)
-                return p->parent->parent->data;
+                return p->parent->parent->key;
         }
     }
 
@@ -271,7 +319,7 @@ int BinaryTree::__Max(BinaryNode *proot)
     else if (proot->right)
         return __Max(proot->right);
     else
-        return proot->data;
+        return proot->key;
 }
 
 int BinaryTree::Min()
@@ -286,7 +334,7 @@ int BinaryTree::__Min(BinaryNode *proot)
     else if (proot->left)
         return __Min(proot->left);
     else
-        return proot->data;
+        return proot->key;
 }
 
 BinaryTree::BinaryTree() : m_root(nullptr), m_size(0)
@@ -297,12 +345,12 @@ BinaryTree::~BinaryTree()
 {
 }
 
-void BinaryTree::InsertNode(int data)
+void BinaryTree::InsertNode(int key)
 {
-    m_root = __InsertNode(m_root, data);
+    m_root = __InsertNode(m_root, key);
 }
 
-BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
+BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int key)
 {
     //find null node
     if (proot == nullptr)
@@ -311,7 +359,7 @@ BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
         BinaryNode *node = new BinaryNode();
         if (node != nullptr)
         {
-            node->data = data;
+            node->key = key;
             proot = node;
             m_size += 1;
         }
@@ -319,14 +367,14 @@ BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int data)
         return proot;
     }
 
-    if (data < proot->data)
+    if (key < proot->key)
     {
-        proot->left = __InsertNode(proot->left, data);
+        proot->left = __InsertNode(proot->left, key);
         proot->left->parent = proot;
     }
-    else if (data > proot->data)
+    else if (key > proot->key)
     {
-        proot->right = __InsertNode(proot->right, data);
+        proot->right = __InsertNode(proot->right, key);
         proot->right->parent = proot;
     }
 
@@ -343,7 +391,7 @@ void BinaryTree::__PostOrder(BinaryNode *proot)
     __PostOrder(proot->left);
     __PostOrder(proot->right);
 
-    std::cout << " " << proot->data;
+    std::cout << " " << proot->key;
 }
 
 void BinaryTree::PostOrder()
@@ -359,9 +407,9 @@ void BinaryTree::__InOrder(BinaryNode *proot)
         return;
 
     __InOrder(proot->left);
-    std::cout << " " << proot->data;
+    std::cout << " " << proot->key;
     if (proot->parent)
-        printf("\n%d parent:%d\n", proot->data, proot->parent->data);
+        printf("\n%d parent:%d\n", proot->key, proot->parent->key);
     __InOrder(proot->right);
 }
 
@@ -377,7 +425,7 @@ void BinaryTree::__PreOrder(BinaryNode *proot)
     if (proot == nullptr)
         return;
 
-    std::cout << " " << proot->data;
+    std::cout << " " << proot->key;
     __PreOrder(proot->left);
     __PreOrder(proot->right);
 }
@@ -389,29 +437,29 @@ void BinaryTree::PreOrder()
     std::cout << std::endl;
 }
 
-BinaryNode *BinaryTree::__FindNode(BinaryNode *proot, int data)
+BinaryNode *BinaryTree::__FindNode(BinaryNode *proot, int key)
 {
     if (proot == NULL)
     {
         return nullptr;
     }
 
-    if (proot->data > data)
+    if (proot->key > key)
     {
-        return __FindNode(proot->left, data);
+        return __FindNode(proot->left, key);
     }
-    else if (proot->data < data)
+    else if (proot->key < key)
     {
-        return __FindNode(proot->right, data);
+        return __FindNode(proot->right, key);
     }
 
     // find node proot
     return proot;
 }
 
-BinaryNode *BinaryTree::FindNode(int data)
+BinaryNode *BinaryTree::FindNode(int key)
 {
-    return __FindNode(m_root, data);
+    return __FindNode(m_root, key);
 }
 
 #endif // !__BINARY_TREE_H__

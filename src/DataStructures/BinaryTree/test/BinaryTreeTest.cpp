@@ -27,7 +27,7 @@ int main(int args, char **argv)
     BinaryNode *n = b.FindNode(3);
     if (n)
     {
-        cout << "n:" << n->data;
+        cout << "n:" << n->key;
     }
     else
     {
