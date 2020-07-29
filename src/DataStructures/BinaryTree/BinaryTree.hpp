@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <string>
+#include <cstring>
+#include <unistd.h>
 
 // add shard_ptr
 // 函数实现通过指针引用类型实现  *&
@@ -28,6 +31,7 @@ public:
     void PostOrder();
     void InOrder();
     void PreOrder();
+    void ShowTree();
 
     void InsertNode(int key);
     BinaryNode *FindNode(int key);
@@ -45,13 +49,17 @@ public:
     void Remove(int key);
 
 private:
+    void __ShowNode(BinaryNode *node);
     void __Remove(BinaryNode *proot, int key);
     BinaryNode *__RemoveAll(BinaryNode *proot);
     BinaryNode *__Floor(BinaryNode *proot, int key);
     BinaryNode *__Ceilling(BinaryNode *proot, int key);
+
     void __PostOrder(BinaryNode *proot);
     void __InOrder(BinaryNode *proot);
     void __PreOrder(BinaryNode *proot);
+    void __ShowTree(BinaryNode *parent, BinaryNode *root, std::string &prefix);
+
     BinaryNode *__InsertNode(BinaryNode *proot, int key);
     BinaryNode *__FindNode(BinaryNode *proot, int key);
     BinaryNode *__Max(BinaryNode *proot);
@@ -62,6 +70,49 @@ private:
     BinaryNode *m_root;
     size_t m_size;
 };
+
+void BinaryTree::ShowTree()
+{
+    std::string prefix;
+    __ShowTree(m_root, m_root, prefix);
+}
+
+void BinaryTree::__ShowTree(BinaryNode *parent, BinaryNode *root, std::string &prefix)
+{
+    prefix += "|";
+    if (root)
+    {
+        std::cout << prefix << "--" << root->key << std::endl;
+        if (root == parent || root == parent->right)
+        {
+            prefix.pop_back();
+            prefix += " ";
+        }
+        __ShowTree(root, root->left, prefix);
+        __ShowTree(root, root->right, prefix);
+    }
+    else
+    {
+        if (parent->left || parent->right) //有一个孩子节点不空就打印，以区分左右孩子
+            std::cout << prefix << "--"
+                      << "{}" << std::endl;
+    }
+}
+
+void BinaryTree::__ShowNode(BinaryNode *node)
+{
+    if (node == nullptr)
+        return;
+
+    printf(":%s:%d node:%p key:%d left:%p right:%p parent:%p\n",
+           __func__, __LINE__, node, node->key, node->left, node->right, node->parent);
+    if (node->left)
+        printf("left->key:%d\n", node->left->key);
+    if (node->right)
+        printf("right->key:%d\n", node->right->key);
+    if (node->parent)
+        printf("parent->key:%d\n", node->parent->key);
+}
 
 void BinaryTree::Remove(int key)
 {
@@ -93,21 +144,32 @@ void BinaryTree::__Remove(BinaryNode *proot, int key)
     {
         rmin = __Min(p->right);
         p->key = rmin->key;
-        p = rmin; //delete rmin node
+        p = rmin; //delete rmin node, goto next step
     }
 
-    //don't have child
     if (p->left == nullptr && p->right == nullptr)
     {
-        delete p;
-        m_size--;
+        //没有节点， 设置p的父节点的指针
+        //set p->parent node
+        if (p->parent)
+        {
+            if (p->parent->left == p)
+                p->parent->left == nullptr;
+            else
+                p->parent->right = nullptr;
+        }
     }
-
-    //have one child, set child->parent to it's parent
-    if (p->left == nullptr || p->right == nullptr)
+    else if ((p->left && p->right == nullptr) || (p->right && p->left == nullptr))
     {
+        //有一个子节点，设置子节点的父节点为节点p的父节点
+        //设置父节点的指针指向子节点
+        // set child<--> parent pointer
+        //设置父节点的指针指向子节点
         if (p->left)
         {
+            //p->left->child
+            p->left->parent = p->parent; //set child's parent
+
             if (p->parent->left == p)
                 p->parent->left == p->left;
             else
@@ -115,14 +177,18 @@ void BinaryTree::__Remove(BinaryNode *proot, int key)
         }
         else
         {
+            //p->right child
+            p->right->parent = p->parent;
+
             if (p->parent->left == p)
                 p->parent->left == p->right;
             else
-                p->parent->right == p->right;
+                p->parent->right = p->right;
         }
-        delete p;
-        m_size--;
     }
+
+    delete p;
+    m_size--;
 }
 
 void BinaryTree::RemoveAll()
@@ -437,8 +503,6 @@ void BinaryTree::__InOrder(BinaryNode *proot)
 
     __InOrder(proot->left);
     std::cout << " " << proot->key;
-    if (proot->parent)
-        printf("\n%d parent:%d\n", proot->key, proot->parent->key);
     __InOrder(proot->right);
 }
 

@@ -6,12 +6,13 @@ using namespace std;
 
 int main(int args, char **argv)
 {
+    //int a[] = {41, 20, 65};
     int a[] = {41, 20, 27, 11, 10, 13, 29, 65};
     BinaryTree b;
 
     for (size_t i = 0; i < sizeof(a) / sizeof(int); i++)
     {
-        std::cout << "insert:" << a[i] << endl;
+        //std::cout << "insert:" << a[i] << endl;
         b.InsertNode(a[i]);
     }
 
@@ -19,7 +20,7 @@ int main(int args, char **argv)
     b.PreOrder();
 
     cout << "InOrder:" << endl;
-    b.InOrder();
+   // b.InOrder();
 
     cout << "PostOrder:" << endl;
     b.PostOrder();
@@ -47,13 +48,12 @@ int main(int args, char **argv)
 
     cout << "Ceilling(19):" << b.Ceilling(19) << endl;
 
-#if 1
-    b.InOrder();
+    //b.ShowTree();
+
     cout << "Remove" << endl;
     
     b.Remove(20);
     b.InOrder();
-#endif
 
     b.RemoveAll();
     cout << "RemoveAll InOrder:" << endl;
