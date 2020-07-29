@@ -50,7 +50,7 @@ int main(int args, char **argv)
 
     //b.ShowTree();
 
-    cout << "Remove" << endl;
+    cout << "Remove 20:" << endl;
     
     b.Remove(20);
     b.InOrder();

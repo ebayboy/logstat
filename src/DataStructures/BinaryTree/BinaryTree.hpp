@@ -479,7 +479,6 @@ BinaryNode *BinaryTree::__InsertNode(BinaryNode *proot, int key)
 
 void BinaryTree::__PostOrder(BinaryNode *proot)
 {
-    std::cout << "m_size: " << m_size << std::endl;
     if (proot == nullptr)
         return;
 
