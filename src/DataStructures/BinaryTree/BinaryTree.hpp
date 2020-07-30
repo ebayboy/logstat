@@ -5,11 +5,12 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+#include <queue>
+
 #include <unistd.h>
 
 // add shard_ptr
 // 函数实现通过指针引用类型实现  *&
-// 树形打印二叉树
 
 struct BinaryNode
 {
@@ -31,7 +32,7 @@ public:
     void PostOrder();
     void InOrder();
     void PreOrder();
-    void ShowTree();
+    void LevelTraversal();
 
     void InsertNode(int key);
     BinaryNode *FindNode(int key);
@@ -58,7 +59,7 @@ private:
     void __PostOrder(BinaryNode *proot);
     void __InOrder(BinaryNode *proot);
     void __PreOrder(BinaryNode *proot);
-    void __ShowTree(BinaryNode *parent, BinaryNode *root, std::string &prefix);
+    void __LevelTraversal(BinaryNode *root);
 
     BinaryNode *__InsertNode(BinaryNode *proot, int key);
     BinaryNode *__FindNode(BinaryNode *proot, int key);
@@ -71,31 +72,44 @@ private:
     size_t m_size;
 };
 
-void BinaryTree::ShowTree()
+//层次遍历
+void BinaryTree::LevelTraversal()
 {
-    std::string prefix;
-    __ShowTree(m_root, m_root, prefix);
+    std::cout << __func__ << std::endl;
+    __LevelTraversal(m_root);
 }
 
-void BinaryTree::__ShowTree(BinaryNode *parent, BinaryNode *root, std::string &prefix)
+//层次打印：
+/*
+这其实就是二叉树的层次遍历
+1、创建一个树结点的队列，先把根结点放入队列
+2、遍历当前队列的所有树节点，每出队一个树节点就把他的孩子入队
+3、如果此时队列不为空，执行2
+*/
+void BinaryTree::__LevelTraversal(BinaryNode *proot)
 {
-    prefix += "|";
-    if (root)
+    std::queue<BinaryNode *> q, tmp;
+    BinaryNode *p;
+
+    tmp.push(proot);
+    while (!tmp.empty())
     {
-        std::cout << prefix << "--" << root->key << std::endl;
-        if (root == parent || root == parent->right)
+        tmp.swap(q);
+
+        while (!q.empty())
         {
-            prefix.pop_back();
-            prefix += " ";
+            p = q.front();
+            printf("%d ", p->key);
+            q.pop();
+
+            //child node put in tmp
+            if (p->left)
+                tmp.push(p->left);
+            if (p->right)
+                tmp.push(p->right);
         }
-        __ShowTree(root, root->left, prefix);
-        __ShowTree(root, root->right, prefix);
-    }
-    else
-    {
-        if (parent->left || parent->right) //有一个孩子节点不空就打印，以区分左右孩子
-            std::cout << prefix << "--"
-                      << "{}" << std::endl;
+
+        printf("\n");
     }
 }
 
