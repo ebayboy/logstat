@@ -20,7 +20,7 @@ struct BinaryNode
     BinaryNode *parent;
 
     //struct constructor
-    BinaryNode() : key(0), left(nullptr), right(nullptr){};
+    BinaryNode() : key(0), left(nullptr), right(nullptr), parent(nullptr) {};
 };
 
 class BinaryTree
