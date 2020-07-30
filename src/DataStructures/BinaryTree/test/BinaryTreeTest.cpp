@@ -1,5 +1,6 @@
-#include <bits/stdc++.h>
+//test for BinaryTree.hpp
 
+#include <bits/stdc++.h>
 #include "BinaryTree.hpp"
 
 using namespace std;
@@ -10,15 +11,11 @@ int main(int args, char **argv)
     int a[] = {41, 20, 27, 11, 10, 13, 29, 65};
     BinaryTree b;
     
-
     for (size_t i = 0; i < sizeof(a) / sizeof(int); i++)
     {
         //std::cout << "insert:" << a[i] << endl;
         b.InsertNode(a[i]);
     }
-
-    
-
 
     cout << "PreOrder:" << endl;
     b.PreOrder();
@@ -56,10 +53,7 @@ int main(int args, char **argv)
 
     cout << "Ceilling(19):" << b.Ceilling(19) << endl;
 
-    //b.ShowTree();
-
     cout << "Remove 20:" << endl;
-    
     b.Remove(20);
     b.InOrder();
 
