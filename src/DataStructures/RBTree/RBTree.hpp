@@ -71,10 +71,11 @@ RBNode *RBTree::__Put(RBNode *h, int key, std::string value)
     if (key < h->key)
         h->left = __Put(h->left, key, value);
     else if (key > h->key)
-        h->right = __Put(h->right, key, value);
+        h->right = __Put(h->right, key, value); //第一次调整, 左旋转
     else
         h->value = value;
 
+    //如果是左双红，则进行第二次调整节点（右旋转）
     //2. 调整： 左旋转、右旋转、改变颜色
 
     /* 右单红， 左旋转 */
