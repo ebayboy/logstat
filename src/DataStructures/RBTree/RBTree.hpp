@@ -15,8 +15,8 @@ struct RBNode
     int key;
     std::string value;
     bool color;
-    RBNode() : left(nullptr), right(nullptr), parent(nullptr), key(0) {}
-    RBNode(int key, std::string value, bool color): key(key), value(value), color(color) {}
+    RBNode() {}
+    RBNode(int key, std::string value, bool color) : key(key), value(value), color(color) {}
     //判断红黑树节点的颜色
 
 #if 0 
@@ -36,29 +36,79 @@ public:
     RBTree() {}
     ~RBTree() {}
 
+    void __Put(int key, std::string value);
 
 private:
+    RBNode *m_root;
     /* data */
-    void __RotateLeft(RBNode *proot);
-    void __RotateRight(RBNode *proot);
+    RBNode *__RotateLeft(RBNode *h);
+    RBNode *__RotateRight(RBNode *h);
+    void __FlipColors(RBNode *h);
+    RBNode *__Put(RBNode *h, int key, std::string value);
+    bool __IsRed(RBNode *x);
 };
 
-void RBTree::__RotateLeft (RBNode *proot)
+//判断节点x的颜色
+bool RBTree::__IsRed(RBNode *x)
 {
-    RBNode *r = proot->right;
-    proot->right = r->left;
-    r->left = proot;
-    proot->color = BLACK;
-    r->left->color = RED;
+    if (x == nullptr)
+        return false;
+    return x->color == RED;
 }
 
-void RBTree::__RotateRight (RBNode *proot)
+void RBTree::__Put(int key, std::string value)
 {
-    RBNode *l = proot->left;
-    proot->left = l->right;
-    l->right = proot;
-    proot->color = BLACK;
+    //查找key，找到则更新它的值，找不到就创建一个新的节点
+    m_root = __Put(m_root, key, value);
+    m_root->color = BLACK; //根节点永远是黑色的
+}
+
+RBNode *RBTree::__Put(RBNode *h, int key, std::string value)
+{
+    if (h == nullptr) //标准的插入操作，和父节点用红链接相连
+        return new RBNode(key, value, RED);
+    if (key < h->key)
+        h->left = __Put(h->left, key, value);
+    else if (key > h->key)
+        h->right = __Put(h->right, key, value);
+    else
+        h->value = value;
+
+    if (__IsRed(h->right) && !__IsRed(h->left))
+        h = __RotateLeft(h);
+    if (__IsRed(h->left) && __IsRed(h->left->left))
+        h = __RotateRight(h);
+    if (__IsRed(h->left) && __IsRed(h->right))
+        __FlipColors(h);
+
+    return h;
+}
+
+void RBTree::__FlipColors(RBNode *h)
+{
+    h->color = RED;
+    h->left->color = BLACK;
+    h->right->color = BLACK;
+}
+
+RBNode *RBTree::__RotateLeft(RBNode *h)
+{
+    RBNode *r = h->right;
+    h->right = r->left;
+    r->left = h;
+    h->color = BLACK;
+    r->left->color = RED;
+    return r;
+}
+
+RBNode *RBTree::__RotateRight(RBNode *h)
+{
+    RBNode *l = h->left;
+    h->left = l->right;
+    l->right = h;
+    h->color = BLACK;
     l->left->color = RED;
+    return l;
 }
 
 #endif // !__RBTREE_H__
