@@ -65,17 +65,19 @@ void RBTree::__Put(int key, std::string value)
 
 RBNode *RBTree::__Put(RBNode *h, int key, std::string value)
 {
-    //插入节点
+    //1. 插入节点
     if (h == nullptr) //标准的插入操作，和父节点用红链接相连
         return new RBNode(key, value, RED);
     if (key < h->key)
         h->left = __Put(h->left, key, value);
     else if (key > h->key)
-        h->right = __Put(h->right, key, value); //第一次调整, 左旋转
+        h->right = __Put(h->right, key, value); 
+        //复杂情况： 父节点是红，插入右红的情况下，第一次调整, 递归内部，左旋转
+        //变成左双红， 递归外部会进行二次调整，右旋转
     else
         h->value = value;
 
-    //如果是左双红，则进行第二次调整节点（右旋转）
+    //第二次调整: 递归外部，如果是左双红，则进行第二次调整节点（右旋转）
     //2. 调整： 左旋转、右旋转、改变颜色
 
     /* 右单红， 左旋转 */
