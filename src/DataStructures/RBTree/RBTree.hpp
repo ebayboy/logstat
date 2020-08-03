@@ -65,6 +65,7 @@ void RBTree::__Put(int key, std::string value)
 
 RBNode *RBTree::__Put(RBNode *h, int key, std::string value)
 {
+    //插入节点
     if (h == nullptr) //标准的插入操作，和父节点用红链接相连
         return new RBNode(key, value, RED);
     if (key < h->key)
@@ -74,12 +75,21 @@ RBNode *RBTree::__Put(RBNode *h, int key, std::string value)
     else
         h->value = value;
 
+    //2. 调整： 左旋转、右旋转、改变颜色
+
+    /* 右单红， 左旋转 */
     if (__IsRed(h->right) && !__IsRed(h->left))
         h = __RotateLeft(h);
+    
+    /* 左侧双红， 右旋转 */
     if (__IsRed(h->left) && __IsRed(h->left->left))
         h = __RotateRight(h);
+
+    /* 左右双红， 改变颜色 */
     if (__IsRed(h->left) && __IsRed(h->right))
         __FlipColors(h);
+
+    /* 右双红， 不存在这种情况，因为初始时候红链不可能在右边， 违反2-3树和红黑树定义 */
 
     return h;
 }
