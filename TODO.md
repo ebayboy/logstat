@@ -4,6 +4,10 @@ TODO:
 - 集成日志模块
 - 多线程库学习
 - TimerEv学习
+- 正则过滤hyperscan
+- 后缀表达式计算
+- rule engine
+
 
 #### 处理流程：
 - 接收sub信息
@@ -51,3 +55,8 @@ Done:
 - 计算
 - 输出
 - 多线程架构
+
+
+其他：
+hyperscan：
+http://intel.github.io/hyperscan/dev-reference/tools.html?highlight=combination
