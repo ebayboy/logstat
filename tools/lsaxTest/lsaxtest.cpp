@@ -14,69 +14,25 @@
 #include <getopt.h>
 #include <cstring>
 
+#define ERR() \
+    do { \
+        cerr << "Error:" << __func__ << ":" << __LINE__ << endl;   \
+    } while(0)
+
+#ifdef DEBUG
+#define DD() \
+    do { \
+        cout << "DEBUG:" << __func__ << ":" << __LINE__ << endl;   \
+    } while(0)
+#else
+#define DD() 
+#endif
+
+
 using namespace std;
 
-vector<string> cols = {
-    "time_local nginx_log",
-    "hostname",
-    "pid",
-    "msec",
-    "remote_addr",
-    "remote_port",
-    "document_uri",
-    "status",
-    "bytes_sent",
-    "request_length",
-    "ssl_protocol",
-    "ssl_session_reused",
-    "C_IDC",
-    "tcpinfo_rtt",
-    "host",
-    "server_addr",
-    "server_port",
-    "upstream_http_name",
-    "upstream_addr",
-    "upstream_http_port",
-    "upstream_connect_time",
-    "upstream_header_time",
-    "upstream_response_time",
-    "request_time",
-    "connections_active",
-    "connections_reading",
-    "connection_requests",
-    "connections_writing",
-    "server_name",
-    "http_user_agent",
-    "anti_reason",
-    "anti_action",
-    "request_id",
-    "request_method",
-    "http_referer",
-    "scheme",
-    "uri",
-    "instance_id",
-    "host@instance_id",
-    "server_protocol",
-    "sent_http_content_range",
-    "content_type",
-    "content_length",
-    "body_bytes_sent",
-    "upstream_bytes_received",
-    "upstream_status",
-    "request_uri",
-    "anti_remote_addr",
-    "anti_status",
-    "anti_payload",
-    "user_pin",
-    "upstream_cache_status",
-    "anti_typ",
-    "upstream_err",
-    "anti_req_raw",
-    "anti_resp_raw",
-    "anti_risk_fid",
-    "anti_risk_raw"
-};
-
+static vector<string> cols;
+static string tmp;
 
 inline void stringSplit(std::string const s, std::string sep, std::vector<std::string> &strs)
 {
@@ -93,7 +49,7 @@ inline void stringSplit(std::string const s, std::string sep, std::vector<std::s
         pos = n + sep.size();
     }
 
-//strs.push_back(s.substr(pos, s.size() - pos));
+    strs.push_back(s.substr(pos, s.size() - pos));
 }
 
 
@@ -184,11 +140,9 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 		}
 	}
 
-    string s = "17/Sep/2020:18:46:13 +0800 nginx_log#?#  :hb1-waf-jfe-01#?#  :95601#?#  :1600339573.897#?#  :124.228.143.217#?#  :20930#?#  :/customer/getMyPing#?#  :200#?#  :770#?#  :1005#?#  :TLSv1.2#?#  :0#?#  :LF-1-PUB-NX#?#  :46684#?#  :lzdz-isv.isvjcloud.com#?#  :116.198.3.129#?#  :443#?#  :-#?#  :114.67.237.193:80#?#  :-#?#  :0.000#?#  :0.081#?#  :0.081#?#  :0.083#?#  :4699#?#  :4#?#  :28#?#  :1254#?#  :lzdz-isv.isvjcloud.com#?#  :Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; 125LA; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)#?#  :-#?#  :-#?#  :711a8cc95f34603b8783026320e3344a#?#  :POST#?#  :https://lzdz-isv.isvjcloud.com/customer/getMyPing#?#  :https#?#  :/customer/getMyPing#?#  :waf-ins_cn-north-1_1782fe8ad23d#?#  :lzdz-isv.isvjcloud.com@waf-ins_cn-north-1_1782fe8ad23d#?#  :HTTP/1.1#?#  :-#?#  :application/x-www-form-urlencoded; Charset=UTF-8#?#  :-#?#  :171#?#  :751#?#  :200#?#  :/customer/getMyPing#?#  :10.160.159.122#?#  :200#?#  :-#?#  :ecop-070#?#  :-#?#  :#?#  :FT_STATUS#?#  :#?#  :#?#  :Hengyang#?#  :#?#  :";
-
 	string sep = "#?#  :";
 	vector<string> strs;
-	stringSplit(s, sep, strs);
+	stringSplit(tmp, sep, strs);
 
 	vector<string> hosts;
 	vector<string> remote_addrs;
@@ -208,15 +162,16 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 		ss1.str("");
 	}
 
-	string instance_id = "123";
+	string instance_id = "grp_00";
 	string status = "200";
 	string uri = "/";
 	string user_agent = "Mozilla/5.0";
 	string anti_typ = "";
-	string host;
+	string host = "risk01.00.com";
 	string remote_addr;
 	string localtime;
 	string msec;
+
 	stringstream ss;
 
 	ofstream of(logfile, ios::app);
@@ -250,9 +205,14 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 					usedColsVals[8] = anti_typ;
 
 					updateUsedCols(usedColsIdx, usedColsVals, strs);
-					ss << strs[k] << sep;
+					ss << strs[k];
+                    if (k < strs.size()-1) {
+                        ss << sep;
+                    }
 				}       
-				//cout << ss.str() << endl;
+
+				cout << ss.str() << endl;
+
 				of << ss.str() << endl;
 				ss.str("");
 				std::this_thread::sleep_for(std::chrono::milliseconds(10)); 
@@ -263,6 +223,49 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 	of.close();
 
 	return 0;
+}
+
+static int initCols()
+{
+    //read cols
+    ifstream is("./cols");
+    if (is.bad()) {
+        cerr << "Error:" << __func__ << __LINE__ << endl;
+        return -1;
+    }
+
+    string line;
+
+    while(getline(is, line)) {
+        cols.emplace_back(std::move(line));
+    }
+
+#ifdef DEBUG
+    for( auto && i:cols) {
+        cout << "i:" << i << endl;
+    }
+#endif
+
+    is.close();
+
+    //read template
+    ifstream it("./template");
+    if (is.bad()) {
+        cerr << "Error:" << __func__ << __LINE__ << endl;
+        return -1;
+    }
+
+    stringstream sbuf;
+    sbuf << it.rdbuf();
+    it.close();
+
+    tmp = sbuf.str();
+    if (tmp[tmp.size() - 1] == '\n') {
+        tmp.erase(tmp.size()-1);
+    }
+    printf("tmp:[%s]\n", tmp.c_str());
+
+    return 0;
 }
 
 static void ParseLog(string fname)
@@ -285,12 +288,16 @@ static void ParseLog(string fname)
         cout << sbuf.str() << endl;
         cout << "size(cols):" << cols.size() << endl;
         cout << "size(log):" << strs.size() << endl;
-        for_each(strs.begin(), strs.end(), [&](string x) -> void { cout << "[" << x << "]" << endl;} );
         cerr << "Error: size not equal!" << endl;
+
+        for (size_t i = 0; i <cols.size(); i++)  {
+            printf("i:%d [%s]:[%s]\n", i, cols[i].c_str(), i > strs.size() ? nullptr : strs[i].c_str());
+        }
+
         return ; 
     }
-    
-    for(size_t i=0; i < cols.size(); i++) {
+
+        for(size_t i=0; i < cols.size(); i++) {
         cout << cols[i] << ":" << strs[i] << endl;
     }
 
@@ -304,6 +311,11 @@ int main(int argc, char **argv)
 	size_t ipQPS = 10;
 	string logfile = "/export/servers/jfe/logs/access.log";
     string fname;
+
+    if (initCols() != 0) {
+        ERR();
+        return -1;
+    }
 
 	int ch;
 	opterr = 0;
@@ -336,6 +348,7 @@ int main(int argc, char **argv)
 	cout << "ipSize:" << ipSize << endl;
 	cout << "ipQPS:" << ipQPS << endl;
 	cout << "logfile:" << logfile << endl;
+	cout << "colsSize:" << cols.size() << endl;
 
 	if (hostSize == 0 || ipSize == 0 || ipQPS == 0) {
 		cout <<"Error: iput param zero error!" << endl;

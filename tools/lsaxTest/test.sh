@@ -4,5 +4,5 @@
 while((1))
 do
 ./lsaxtest
-sleep 30
+sleep 3
 done
