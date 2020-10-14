@@ -117,14 +117,15 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 		"status",               //5 //200 | 400
 		"uri",                  //6 //  /
 		"http_user_agent",      //7 // Mozilla/5.0
-		"anti_typ"              //8 // ""
+		"anti_typ",             //8 // ""
+		"anti_risk_fid"         //9 // ""
 	};
 
 	vector<int> usedColsIdx;
 	for (size_t i = 0; i < usedCols.size(); i++)
 	{
 		bool found = false;
-		for (size_t j = 0; i < cols.size(); j++)
+		for (size_t j = 0; j < cols.size(); j++)
 		{
 			if (usedCols[i].compare(cols[j]) == 0)
 			{
@@ -133,12 +134,19 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 				break;
 			}
 		}
+
 		if (!found)
 		{
-			cout << "Error: not find index!" << endl;
+			cout << "Error: not find index!" <<  usedCols[i] << endl;
 			return -1;
 		}
 	}
+
+    cout << "usedColsIdx.size():" << usedColsIdx.size() << endl;
+    if(usedCols.size() != usedColsIdx.size()) {
+        cerr << "size not match: usedCols.size:" << usedCols.size()  << " usedColsIdx.size:" <<  usedColsIdx.size() << endl;
+        return -1;
+    }
 
 	string sep = "#?#  :";
 	vector<string> strs;
@@ -150,7 +158,7 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 	{
 		// 100 hosts
 		stringstream ss;
-		ss << "10.226.133." << i;
+		ss << "host@" << "10.226.133." << i;
 		hosts.push_back(ss.str());
 	}
 
@@ -162,7 +170,7 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 		ss1.str("");
 	}
 
-	string instance_id = "grp_00";
+	string instance_id = "waf-ins_cn-north-1_3f5abca5a72d";
 	string status = "200";
 	string uri = "/";
 	string user_agent = "Mozilla/5.0";
@@ -171,6 +179,7 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 	string remote_addr;
 	string localtime;
 	string msec;
+	string anti_risk_fid;
 
 	stringstream ss;
 
@@ -188,8 +197,12 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 			for(size_t n = 0; n < ipQPS; n++) {
 				for (size_t k = 0; k < strs.size(); k++) 
 				{
-					vector<string> usedColsVals = {"111", "123", "10.226.133.8", "10.226.149.215", "555", "666", "777", "888", "999"};
+					vector<string> usedColsVals = {"111", "123", "10.226.133.8", "10.226.149.215", "555", "666", "777", "888", "999", "anti_risk_fid" };
+
+                    cout << usedColsVals.size() << " : " << usedCols.size() << " : " << usedColsIdx.size() << endl;
+
 					remote_addr = remote_addrs[j];
+					anti_risk_fid = "fid" + remote_addrs[j];
 					localtime = getLocalTime();
 					msec = getCurrentTimeMsec();
 
@@ -203,8 +216,10 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 					usedColsVals[6] = uri;
 					usedColsVals[7] = user_agent;
 					usedColsVals[8] = anti_typ;
+					usedColsVals[9] = anti_risk_fid;
 
 					updateUsedCols(usedColsIdx, usedColsVals, strs);
+
 					ss << strs[k];
                     if (k < strs.size()-1) {
                         ss << sep;
@@ -240,7 +255,7 @@ static int initCols()
         cols.emplace_back(std::move(line));
     }
 
-#ifdef DEBUG
+#if 0
     for( auto && i:cols) {
         cout << "i:" << i << endl;
     }
