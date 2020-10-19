@@ -199,8 +199,6 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 				{
 					vector<string> usedColsVals = {"111", "123", "10.226.133.8", "10.226.149.215", "555", "666", "777", "888", "999", "anti_risk_fid" };
 
-                    cout << usedColsVals.size() << " : " << usedCols.size() << " : " << usedColsIdx.size() << endl;
-
 					remote_addr = remote_addrs[j];
 					anti_risk_fid = "fid" + remote_addrs[j];
 					localtime = getLocalTime();
