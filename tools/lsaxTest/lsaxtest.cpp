@@ -13,6 +13,7 @@
 #include <thread>
 #include <getopt.h>
 #include <cstring>
+#include <functional>
 
 #include <nlohmann/json.hpp>
 #include <base64/base64.h>
@@ -190,13 +191,18 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
     //  to json -> to base64
     string username = "admin";
     string passwd = "123456";
-	string raw_str = "{ \"event\" : { \"username\" : \"" + username +  "\",\"passwd\" : \"" + passwd + "\" } }";
-	json raw_json = json::parse(raw_str);
-    std::string anti_risk_raw = raw_json.dump();
 
-    char *raw_base64 = new char[BASE64_ENCODE_OUT_SIZE(anti_risk_raw.size())];
-    base64_encode((const unsigned char *)anti_risk_raw.c_str(), anti_risk_raw.size(), raw_base64);
-    cout << "raw_base64:" << raw_base64 << endl;
+    auto get_raw_base64 = [](string username, string passwd) {
+        string raw_str = "{ \"event\" : { \"username\" : \"" + username +  "\",\"passwd\" : \"" + passwd + "\" } }";
+        json raw_json = json::parse(raw_str);
+        std::string anti_risk_raw = raw_json.dump();
+        char *raw_base64 = new char[BASE64_ENCODE_OUT_SIZE(anti_risk_raw.size())];
+
+        base64_encode((const unsigned char *)anti_risk_raw.c_str(), anti_risk_raw.size(), raw_base64);
+        string base64(raw_base64);
+        delete []raw_base64;
+        return base64;
+    };
 
 	stringstream ss;
 
@@ -232,7 +238,17 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 					usedColsVals[7] = user_agent;
 					usedColsVals[8] = anti_typ;
 					usedColsVals[9] = anti_risk_fid;
-					usedColsVals[10] = raw_base64;
+
+                    stringstream username_ss, passwd_ss;
+                    username_ss << username;
+                    if (i != 0)  {
+                        username_ss << j;
+                    }
+                    passwd_ss << passwd;
+                    if (i != 0) {
+                        passwd_ss << j;
+                    }
+                    usedColsVals[10] = get_raw_base64(username_ss.str(), passwd_ss.str());
 
 					updateUsedCols(usedColsIdx, usedColsVals, strs);
 
@@ -337,9 +353,9 @@ static void ParseLog(string fname)
 
 int main(int argc, char **argv)
 {
-	size_t hostSize = 1;
-	size_t ipSize = 2;
-	size_t ipQPS = 10;
+	size_t hostSize = 2;
+	size_t ipSize = 5;
+	size_t ipQPS = 20;
 	string logfile = "/export/servers/jfe/logs/access.log";
     string fname;
 
