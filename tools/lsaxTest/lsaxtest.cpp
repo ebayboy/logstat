@@ -13,6 +13,9 @@
 #include <thread>
 #include <getopt.h>
 #include <cstring>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 #define ERR() \
     do { \
@@ -118,7 +121,8 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 		"uri",                  //6 //  /
 		"http_user_agent",      //7 // Mozilla/5.0
 		"anti_typ",             //8 // ""
-		"anti_risk_fid"         //9 // ""
+		"anti_risk_fid",        
+		"anti_risk_raw" 
 	};
 
 	vector<int> usedColsIdx;
@@ -181,6 +185,13 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 	string msec;
 	string anti_risk_fid;
 
+    //  to json -> to base64
+    string username = "admin";
+    string passwd = "123456";
+	string raw_str = "{ \"event\" : { \"username\" : \"" + username +  "\",\"passwd\" : \"" + passwd + "\" } }";
+	json raw_json = json::parse(raw_str);
+    std::string anti_risk_raw = raw_json.dump();
+
 	stringstream ss;
 
 	ofstream of(logfile, ios::app);
@@ -197,10 +208,11 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 			for(size_t n = 0; n < ipQPS; n++) {
 				for (size_t k = 0; k < strs.size(); k++) 
 				{
-					vector<string> usedColsVals = {"111", "123", "10.226.133.8", "10.226.149.215", "555", "666", "777", "888", "999", "anti_risk_fid" };
+					vector<string> usedColsVals = {"111", "123", "10.226.133.8", "10.226.149.215", "555", "666", "777", "888", "999", "anti_risk_fid", "anti_risk_raw" };
 
 					remote_addr = remote_addrs[j];
-					anti_risk_fid = "fid" + remote_addrs[j];
+					anti_risk_fid = "FFIIDD" + remote_addrs[j];
+					anti_risk_raw = "RRAAWW" + remote_addrs[j];
 					localtime = getLocalTime();
 					msec = getCurrentTimeMsec();
 
@@ -215,6 +227,7 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 					usedColsVals[7] = user_agent;
 					usedColsVals[8] = anti_typ;
 					usedColsVals[9] = anti_risk_fid;
+					usedColsVals[10] = anti_risk_raw;
 
 					updateUsedCols(usedColsIdx, usedColsVals, strs);
 
