@@ -13,7 +13,9 @@
 #include <thread>
 #include <getopt.h>
 #include <cstring>
+
 #include <nlohmann/json.hpp>
+#include <base64/base64.h>
 
 using json = nlohmann::json;
 
@@ -192,6 +194,10 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 	json raw_json = json::parse(raw_str);
     std::string anti_risk_raw = raw_json.dump();
 
+    char *raw_base64 = new char[BASE64_ENCODE_OUT_SIZE(anti_risk_raw.size())];
+    base64_encode((const unsigned char *)anti_risk_raw.c_str(), anti_risk_raw.size(), raw_base64);
+    cout << "raw_base64:" << raw_base64 << endl;
+
 	stringstream ss;
 
 	ofstream of(logfile, ios::app);
@@ -212,7 +218,6 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 
 					remote_addr = remote_addrs[j];
 					anti_risk_fid = "FFIIDD" + remote_addrs[j];
-					anti_risk_raw = "RRAAWW" + remote_addrs[j];
 					localtime = getLocalTime();
 					msec = getCurrentTimeMsec();
 
@@ -227,7 +232,7 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 					usedColsVals[7] = user_agent;
 					usedColsVals[8] = anti_typ;
 					usedColsVals[9] = anti_risk_fid;
-					usedColsVals[10] = anti_risk_raw;
+					usedColsVals[10] = raw_base64;
 
 					updateUsedCols(usedColsIdx, usedColsVals, strs);
 
