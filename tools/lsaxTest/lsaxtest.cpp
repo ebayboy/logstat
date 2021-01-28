@@ -165,7 +165,8 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 	{
 		// 100 hosts
 		stringstream ss;
-		ss << "host@" << "10.226.133." << i;
+		//ss << "host@" << "10.226.133." << i;
+		ss << "test.com";
 		hosts.push_back(ss.str());
 	}
 
@@ -177,7 +178,7 @@ int testCase(size_t hostSize, size_t ipSize, size_t ipQPS, string logfile)
 		ss1.str("");
 	}
 
-	string instance_id = "waf-ins_cn-north-1_3f5abca5a72d";
+	string instance_id = "waf-ins_cn-north-1_7a172aa9704a";
 	string status = "200";
 	string uri = "/";
 	string user_agent = "Mozilla/5.0";
